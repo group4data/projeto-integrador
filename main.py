@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
-from functions import transform_csv_to_df, verify_empty_data
+from functions import transform_csv_to_df, verify_empty_data, correcting_data
+
 spark = SparkSession.builder \
     .master('local[*]') \
     .appName("Iniciando com Spark") \
@@ -25,10 +26,12 @@ try:
     verify_empty_data(df_transactions_in)
     verify_empty_data(df_transactions_out)
 
+    print("Corrigindo os dados da coluna valor dos DataFrames de transações!")
+    df_transactions_in = correcting_data(spark, df_transactions_in, columns_transactions)
+    df_transactions_out = correcting_data(spark, df_transactions_out, columns_transactions)
+
+    df_transactions_in.show()
+    df_transactions_out.show()
 
 except Exception as e:
     print(f"Ocorreu o seguinte erro: {e}!")
-
-
-
-

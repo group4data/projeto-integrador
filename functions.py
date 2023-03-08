@@ -4,7 +4,7 @@ import os
 
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType
 from pyspark.sql import functions as f
-from pyspark.sql.functions import col,isnan,isnull
+from pyspark.sql.functions import *
 
 
 # Transforma varios arquivos csv em um Data Frame 
@@ -61,3 +61,8 @@ def verify_empty_data(df):
             if count_null != 0:
                 print(f"Column '{col_name}' has {count_null} null values.")
 
+def correcting_data(spark, df, columns):
+    if columns == df.columns:
+        df = df.withColumn("valor", round(col("valor"), 2))
+        df = df.withColumn('valor', expr('abs(valor)'))
+        return df
