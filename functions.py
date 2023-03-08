@@ -4,7 +4,7 @@ import os
 
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType
 from pyspark.sql import functions as f
-from pyspark.sql.functions import col,isnan,when,count, isnull
+from pyspark.sql.functions import col,isnan,isnull
 
 
 # Transforma varios arquivos csv em um Data Frame 
