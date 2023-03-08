@@ -10,7 +10,9 @@ COPY --from=py3 / /
 ARG PYSPARK_VERSION=3.3.2
 
 RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION}
-RUN pip --no-cache-dir install pandas
 RUN pip --no-cache-dir install ipykernel
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
 ENTRYPOINT ["bash"]
