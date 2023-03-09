@@ -66,3 +66,24 @@ def correcting_data(spark, df, columns):
         df = df.withColumn("valor", round(col("valor"), 2))
         df = df.withColumn('valor', expr('abs(valor)'))
         return df
+
+
+def add_state_column(df):
+    # Cria coluna do DDD a partir da coluna Telefone
+    df = df.withColumn('DDD', split(df['telefone'], r'[()]+').getItem(1))
+    # Substitui os DDDs pelo Estado correspondente
+    df = df.withColumn('Estado', when(col('DDD') == '20', 'Inválido')
+                        .when(col('DDD') == '21', 'Rio de Janeiro')
+                        .when(col('DDD') == '22', 'Rio de Janeiro')
+                        .when(col('DDD') == '23', 'Inválido')
+                        .when(col('DDD') == '24', 'Rio de Janeiro')
+                        .when(col('DDD') == '25', 'Inválido')
+                        .when(col('DDD') == '26', 'Inválido')
+                        .when(col('DDD') == '27', 'Espírito Santo')
+                        .when(col('DDD') == '28', 'Espírito Santo')
+                        .when(col('DDD') == '29', 'Inválido')
+                        .when(col('DDD') == '30', 'Inválido')
+                        .otherwise('Inválido'))
+    # Apagando coluna DDD
+    df = df.drop('DDD')
+    return df
