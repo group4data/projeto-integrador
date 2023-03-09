@@ -45,7 +45,6 @@ def transform_csv_to_df(spark, path, columns):
 
 
 def verify_empty_data(df):
-
     for col_name in df.columns:
         data_type = df.schema[col_name].dataType
         if data_type == StringType():
@@ -87,3 +86,20 @@ def add_state_column(df):
     # Apagando coluna DDD
     df = df.drop('DDD')
     return df
+
+def verify_schema(df, expected_schema, expected_columns):
+    actual_schema = df.schema
+
+    if actual_schema == expected_schema:
+        print("The schema is correct!")
+    else:
+        actual_columns = [(f.name, f.dataType) for f in actual_schema.fields]
+        missing_columns = set(expected_columns) - set([c[0] for c in actual_columns])
+        unexpected_columns = set([c[0] for c in actual_columns]) - set(expected_columns)
+        incorrect_types = [(c[0], c[1]) for c in actual_columns if c[0] in expected_columns and c[1] != expected_schema[c[0]].dataType]
+        if missing_columns:
+            print("Error: The following columns are missing: {}".format(missing_columns))
+        if unexpected_columns:
+            print("Error: The following columns are unexpected: {}".format(unexpected_columns))
+        if incorrect_types:
+            print("Error: The following columns have incorrect data types: {}".format(incorrect_types))
