@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
-from functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column
+from functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names
 from pyspark.sql.functions import *
 from pyspark.sql.types import StringType
 
@@ -37,13 +37,16 @@ try:
     print("Adicionando a coluna de estado na planilha de clientes...")
     df_clients = add_state_column(df_clients)
     
-    print("-" * 20)
+    print("Formatando a coluna de nomes dos clientes...")
+    df_clients = format_names(df_clients)
+        
+    print("-" * 30)
     print("Transações in")
     df_transactions_in.show()
-    print("-" * 20)
+    print("-" * 30)
     print("Transações out")
     df_transactions_out.show()
-    print("-" * 20)
+    print("-" * 30)
     print("Dados dos clientes")
     df_clients.show()
     
