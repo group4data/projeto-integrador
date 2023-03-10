@@ -38,9 +38,9 @@ try:
     df_transactions_out = transform_csv_to_df(spark, transactions_out , transactions_schema)
    
     print("Verificando se há dados não informados nas colunas dos DataFrames...")
-    verify_empty_data(df_clients)
-    verify_empty_data(df_transactions_in)
-    verify_empty_data(df_transactions_out)
+    df_clients = verify_empty_data(df_clients)
+    df_transactions_in = verify_empty_data(df_transactions_in)
+    df_transactions_out = verify_empty_data(df_transactions_out)
     
     print("Corrigindo os dados da coluna valor dos DataFrames de transações...")
     df_transactions_in = correcting_data(spark, df_transactions_in)
