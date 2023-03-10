@@ -1,5 +1,5 @@
 ARG IMAGE_VARIANT=slim-buster
-ARG OPENJDK_VERSION=8
+ARG OPENJDK_VERSION=11
 ARG PYTHON_VERSION=3.9.8
 
 FROM python:${PYTHON_VERSION}-${IMAGE_VARIANT} AS py3
@@ -13,6 +13,8 @@ RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION}
 RUN pip --no-cache-dir install ipykernel
 RUN pip --no-cache-dir install pandas
 RUN pip --no-cache-dir install pyodbc
+RUN pip --no-cache-dir install tqdm
+RUN pip --no-cache-dir install python-dotenv
 
 RUN apt-get update && \
     apt-get install -y curl gnupg && \
