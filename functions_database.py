@@ -1,11 +1,15 @@
 import pyodbc
+import os
 from pyspark.sql.types import *
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def connection_database():
-    server_name = 'server'
-    database_name = 'banco'
-    username = 'user'
-    password = 'pwd'
+    server_name = os.environ["server_name"]
+    database_name = os.environ["database_name"]
+    username = os.environ["username"]
+    password = os.environ["password"]
 
     connection_string = f"Driver={{ODBC Driver 18 for SQL Server}};Server=tcp:{server_name},1433;Database={database_name};Uid={username};Pwd={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
     return pyodbc.connect(connection_string)
