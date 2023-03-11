@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-from transform_functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence
+from transform_functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence, renamed_column
 from database_functions import connection_database, create_table_clients, create_table_transactions, insert_df_into_db
 
 from pyspark.sql.types import *
