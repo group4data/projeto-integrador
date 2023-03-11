@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-from transform_functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence, union_df_in_out
+from transform_functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence
 from database_functions import connection_database, create_table_clients, create_table_transactions, insert_df_into_db
 
 from pyspark.sql.types import *
@@ -71,11 +71,6 @@ try:
         print("\nInserindo dados na tabela...")
         insert_df_into_db(conn, df_clients, "clientes")
             
-        df_transactions_in = df_transactions_in.join(df_clients, df_clients.id == df_transactions_in.cliente_id, "leftsemi")
-        df_transactions_out = df_transactions_out.join(df_clients, df_clients.id == df_transactions_out.cliente_id, "leftsemi")
-        df_transactions_in = df_transactions_in.withColumnRenamed("data", "data_hora")
-        df_transactions_out = df_transactions_out.withColumnRenamed("data", "data_hora")
-
         print("\nCriando a tabela de transações in no banco de dados!")
         create_table_transactions(conn, df_transactions_in, "transactions_in")
 

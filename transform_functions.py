@@ -102,8 +102,3 @@ def verify_client_id_existence(spark, df_transactions, df_clients):
     return df_clients
 
 
-def union_df_in_out(df_transactions_in, df_transactions_out):
-    df_transactions_in = df_transactions_in.withColumn('tipo_transacao', lit('IN'))
-    df_transactions_out = df_transactions_out.withColumn('tipo_transacao', lit('OUT'))
-    df_transactions = df_transactions_in.unionAll(df_transactions_out)
-    return df_transactions
