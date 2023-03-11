@@ -111,3 +111,5 @@ def verify_client_id_existence(spark, df_transactions, df_clients):
     return df_clients
 
 
+def renamed_column(df, previous_column, new_column):
+     return df.withColumnRenamed(previous_column, new_column)
