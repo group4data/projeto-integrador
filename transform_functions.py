@@ -29,14 +29,23 @@ def verify_empty_data(df):
             count_empty = df.filter((col(col_name) == '') | isnull(col_name) | isnan(col_name) | (col(col_name).isNull())).count()
             if count_empty != 0:
                 print(f"Column '{col_name}' has {count_empty} empty/null/none/NaN values.")
+                df = df.fillna({col_name: 'Não informado'})
         elif data_type == IntegerType():
             count_null = df.filter(col(col_name).isNull()).count()
             if count_null != 0:
                 print(f"Column '{col_name}' has {count_null} null values.")
+                df = df.fillna({col_name: 0})
+        elif data_type == DoubleType():
+            count_null = df.filter(col(col_name).isNull()).count()
+            if count_null != 0:
+                print(f"Column '{col_name}' has {count_null} null values.")
+                df = df.fillna({col_name: 0.00})
         elif data_type == TimestampType():
             count_null = df.filter(col(col_name).isNull()).count()
             if count_null != 0:
                 print(f"Column '{col_name}' has {count_null} null values.")
+                df = df.fillna({col_name: '1900-01-01 00:00:00'})
+    return df
 
 def correcting_data(df):
     df = df.withColumn("valor", round(col("valor"), 2))
