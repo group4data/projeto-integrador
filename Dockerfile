@@ -13,7 +13,6 @@ RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION}
 RUN pip --no-cache-dir install ipykernel
 RUN pip --no-cache-dir install pandas
 RUN pip --no-cache-dir install pyodbc
-RUN pip --no-cache-dir install tqdm
 RUN pip --no-cache-dir install python-dotenv
 
 RUN apt-get update && \

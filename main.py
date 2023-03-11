@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.window import Window
-from functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names
+from functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence, union_df_in_out
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from functions_database import connection_database, create_table_clients, create_table_transactions
@@ -13,6 +13,7 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 clients = "Data/Clients"
+
 transactions_in = "Data/Transactions-in"
 transactions_out = "Data/Transactions-out"
 
@@ -36,22 +37,30 @@ try:
     df_clients = transform_csv_to_df(spark, clients, clients_schema)
     df_transactions_in = transform_csv_to_df(spark, transactions_in, transactions_schema)
     df_transactions_out = transform_csv_to_df(spark, transactions_out , transactions_schema)
-   
-    print("Verificando se há dados não informados nas colunas dos DataFrames...")
-    df_clients = verify_empty_data(df_clients)
-    df_transactions_in = verify_empty_data(df_transactions_in)
-    df_transactions_out = verify_empty_data(df_transactions_out)
-    
-    print("Corrigindo os dados da coluna valor dos DataFrames de transações...")
-    df_transactions_in = correcting_data(spark, df_transactions_in)
-    df_transactions_out = correcting_data(spark, df_transactions_out)
+    print("OK")
 
-    print("Adicionando a coluna de estado na planilha de clientes...")
+    print("Verificando se há dados não informados nas colunas dos DataFrames...")
+    verify_empty_data(df_clients)
+    verify_empty_data(df_transactions_in)
+    verify_empty_data(df_transactions_out)
+    print("OK")
+
+    print("Corrigindo os dados da coluna valor dos DataFrames de transações...")
+    df_transactions_in = correcting_data(df_transactions_in)
+    df_transactions_out = correcting_data(df_transactions_out)
+    print("OK")
+
+    print("Formatando o DataFrame de clientes...")
     df_clients = add_state_column(df_clients)
-    
-    print("Formatando a coluna de nomes dos clientes...")
     df_clients = format_names(df_clients)
-        
+    df_clients = verify_client_id_existence(spark, df_transactions_in, df_clients)
+    df_clients = verify_client_id_existence(spark, df_transactions_out, df_clients)
+    print("OK")
+
+    print("Unindo os dados das transações em um único DataFrame...")
+    dt_transactions = union_df_in_out(df_transactions_in, df_transactions_out)
+    print("OK")
+      
     print("-" * 30)
     print("Transações in")
     df_transactions_in.show()
@@ -82,3 +91,4 @@ try:
     
 except Exception as e:
     print(f"Ocorreu o seguinte erro: {e}!")
+
