@@ -57,6 +57,12 @@ try:
     df_clients = verify_client_id_existence(spark, df_transactions_in, df_clients)
     df_clients = verify_client_id_existence(spark, df_transactions_out, df_clients)
     print("OK")
+    
+    print("Alterando o nome das colunas de data e hora dos DataFrames...")
+    df_clients = renamed_column(df_clients,"data_cadastro", "data_hora_cadastro")
+    df_transactions_in = renamed_column(df_transactions_in, "data", "data_hora")
+    df_transactions_out = renamed_column(df_transactions_out, "data", "data_hora")
+    print("OK")
 
     try:
         print("Conectando com o banco de dados...")
