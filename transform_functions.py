@@ -2,7 +2,7 @@ import glob
 import csv
 import os
 
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType
+from pyspark.sql.types import *
 from pyspark.sql import functions as f
 from pyspark.sql.functions import *
 

@@ -1,10 +1,12 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.window import Window
-from functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence, union_df_in_out
-from pyspark.sql.functions import *
+
+from transform_functions import transform_csv_to_df, verify_empty_data, correcting_data, add_state_column, format_names, verify_client_id_existence, union_df_in_out
+from database_functions import connection_database, create_table_clients, create_table_transactions, insert_df_into_db
+
 from pyspark.sql.types import *
-from functions_database import connection_database, create_table_clients, create_table_transactions
-import pyodbc
+from pyspark.sql.functions import *
+
+
 
 spark = SparkSession.builder \
     .master('local[*]') \
@@ -13,7 +15,6 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 clients = "Data/Clients"
-
 transactions_in = "Data/Transactions-in"
 transactions_out = "Data/Transactions-out"
 
@@ -57,10 +58,37 @@ try:
     df_clients = verify_client_id_existence(spark, df_transactions_out, df_clients)
     print("OK")
 
-    print("Unindo os dados das transações em um único DataFrame...")
-    dt_transactions = union_df_in_out(df_transactions_in, df_transactions_out)
-    print("OK")
-      
+    try:
+        print("Conectando com o banco de dados...")
+        conn = connection_database()
+        print("OK")
+    except Exception:
+        print("Não foi possivel se conectar com o banco de dados!")
+    else:
+        print("\nCriando tabela de clientes no banco de dados!")
+        create_table_clients(conn, df_clients)
+        
+        print("\nInserindo dados na tabela...")
+        insert_df_into_db(conn, df_clients, "clientes")
+            
+        df_transactions_in = df_transactions_in.join(df_clients, df_clients.id == df_transactions_in.cliente_id, "leftsemi")
+        df_transactions_out = df_transactions_out.join(df_clients, df_clients.id == df_transactions_out.cliente_id, "leftsemi")
+        df_transactions_in = df_transactions_in.withColumnRenamed("data", "data_hora")
+        df_transactions_out = df_transactions_out.withColumnRenamed("data", "data_hora")
+
+        print("\nCriando a tabela de transações in no banco de dados!")
+        create_table_transactions(conn, df_transactions_in, "transactions_in")
+
+        print("\nInserindo dados na tabela...")
+        insert_df_into_db(conn, df_transactions_in, "transactions_in")
+    
+        print("\nCriando a tabela de transações out no banco de dados!")
+        create_table_transactions(conn, df_transactions_out, "transactions_out")
+
+        print("\nInserindo dados na tabela...")
+        insert_df_into_db(conn, df_transactions_out, "transactions_out")
+       
+    print("\n")
     print("-" * 30)
     print("Transações in")
     df_transactions_in.show()
@@ -70,24 +98,6 @@ try:
     print("-" * 30)
     print("Dados dos clientes")
     df_clients.show()
-
-    '''
-    try:
-        print("Conectando com o banco de dados...")
-        conn = connection_database()
-    except Exception:
-        print("Não foi possivel se conectar com o banco de dados!")
-    else:
-        print("Criando tabela de clientes no banco de dados!")
-        create_table_clients(conn, df_clients)
-        
-        df_transactions_in = df_transactions_in.join(df_clients, df_clients.id == df_transactions_in.cliente_id, "leftsemi")
-        df_transactions_out = df_transactions_out.join(df_clients, df_clients.id == df_transactions_out.cliente_id, "leftsemi")
-
-        print("Criando as tabelas de transações no banco de dados!")
-        create_table_transactions(conn, df_transactions_in, "transactions_in")
-        create_table_transactions(conn, df_transactions_out, "transactions_out")
-    '''
     
 except Exception as e:
     print(f"Ocorreu o seguinte erro: {e}!")
