@@ -9,7 +9,7 @@ from pyspark.sql.functions import *
 spark = SparkSession.builder \
     .master('local[*]') \
     .appName("Iniciando com Spark") \
-    .config('spark.ui.port', '4051') \
+    .config('spark.ui.port', '4050') \
     .getOrCreate()
 
 clients = "Data/Clients"
