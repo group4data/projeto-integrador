@@ -9,11 +9,12 @@ COPY --from=py3 / /
 
 ARG PYSPARK_VERSION=3.3.2
 
-RUN pip --no-cache-dir install pyspark==${PYSPARK_VERSION}
-RUN pip --no-cache-dir install ipykernel
-RUN pip --no-cache-dir install pandas
-RUN pip --no-cache-dir install pyodbc
-RUN pip --no-cache-dir install python-dotenv
+RUN pip --no-cache-dir install \
+    pyspark==${PYSPARK_VERSION} \
+    ipykernel \
+    pandas \
+    pyodbc \
+    python-dotenv
 
 RUN apt-get update && \
     apt-get install -y curl gnupg && \
@@ -24,7 +25,4 @@ RUN apt-get update && \
     apt-get install -y unixodbc-dev && \
     pip install pyodbc
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-ENTRYPOINT ["bash"]
+CMD ["bash"]
