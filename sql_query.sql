@@ -31,8 +31,17 @@ ADD CONSTRAINT fk_clientes_id
 FOREIGN KEY (cliente_id)
 REFERENCES clientes (id);
 
+CREATE VIEW frauds_by_client AS
+    SELECT c.nome, COUNT(ft.id_transaction) as quantidade_transacoes
+    FROM  fraudulent_transactions ft
+    JOIN  clientes c
+    ON c.id = ft.cliente_id 
+    GROUP BY ft.cliente_id, c.nome;
+
+DROP VIEW frauds_by_client;
+
 CREATE VIEW frauds_by_state AS
-    SELECT COUNT(ft.cliente_id) as quantidade_de_fraudes, c.estado 
+    SELECT c.estado, COUNT(ft.cliente_id) as quantidade_de_fraudes
     FROM fraudulent_transactions ft 
     JOIN clientes c 
     ON c.id = ft.cliente_id 
@@ -40,10 +49,10 @@ CREATE VIEW frauds_by_state AS
 
 SELECT * 
 FROM frauds_by_state
-ORDER BY quantidade_de_fraudes_por_estado DESC;
+ORDER BY quantidade_de_fraudes DESC;
 
 CREATE VIEW sum_of_frauds AS
-    SELECT SUM(valor) as somatorio_valor, tipo_transacao
+    SELECT tipo_transacao, SUM(valor) as somatorio_valor
     FROM  fraudulent_transactions
     GROUP BY tipo_transacao;
 
@@ -52,7 +61,7 @@ FROM sum_of_frauds
 ORDER BY somatorio_valor DESC;
 
 CREATE VIEW count_of_frauds AS
-    SELECT COUNT(valor) as quantidade_transacoes, tipo_transacao
+    SELECT tipo_transacao, COUNT(valor) as quantidade_transacoes
     FROM  fraudulent_transactions
     GROUP BY tipo_transacao;
 
@@ -92,7 +101,7 @@ FROM frauds_by_shift_and_year
 ORDER BY ano;
 
 CREATE VIEW frauds_by_month AS
-    SELECT COUNT(id_transaction) AS quantidade_de_fraudes, MONTH(data_hora) AS mes
+    SELECT MONTH(data_hora) AS mes, COUNT(id_transaction) AS quantidade_de_fraudes
     FROM fraudulent_transactions
     GROUP BY MONTH(data_hora);
 
