@@ -6,8 +6,6 @@ from database_functions import connection_database, create_table_clients, create
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 
-
-
 spark = SparkSession.builder \
     .master('local[*]') \
     .appName("Iniciando com Spark") \
@@ -68,8 +66,8 @@ try:
         print("Conectando com o banco de dados...")
         conn = connection_database()
         print("OK")
-    except Exception:
-        print("Não foi possivel se conectar com o banco de dados!")
+    except Exception as e:
+        print(f"Não foi possivel se conectar com o banco de dados! Por causa do seguinte erro: {e}")
     else:
         print("\nCriando tabela de clientes no banco de dados!")
         create_table_clients(conn, df_clients)
