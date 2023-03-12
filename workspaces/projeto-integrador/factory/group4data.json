@@ -1,0 +1,9 @@
+{
+	"name": "group4data",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "df7006a2-c503-4871-9f35-f214603135f5",
+		"tenantId": "f310b526-e195-4805-a55e-67e28f2fefdb"
+	}
+}
