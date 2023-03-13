@@ -1,5 +1,5 @@
 {
-	"name": "frauds_by_month",
+	"name": "fraudulent_transactions",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Group4Data_Database",
@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "frauds_by_month"
+			"table": "fraudulent_transactions"
 		}
 	}
 }

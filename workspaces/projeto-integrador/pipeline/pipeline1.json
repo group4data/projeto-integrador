@@ -37,7 +37,7 @@
 					{
 						"activity": "view all_transactions",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -71,7 +71,7 @@
 					{
 						"activity": "view frauds_by_client",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -105,7 +105,7 @@
 					{
 						"activity": "Order by quantidade_de_fraudes desc",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -139,7 +139,7 @@
 					{
 						"activity": "Order by somatorio_valor desc",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -207,7 +207,7 @@
 					{
 						"activity": "Order by Ano desc",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -241,7 +241,7 @@
 					{
 						"activity": "Order by ano",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -274,7 +274,7 @@
 					{
 						"activity": "Create table defrauded_clients",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -306,7 +306,7 @@
 					{
 						"activity": "Order by cliente_id",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -340,7 +340,7 @@
 					{
 						"activity": "Alter table defrauded_clients",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -373,7 +373,7 @@
 					{
 						"activity": "view frauds_by_state",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -405,7 +405,7 @@
 					{
 						"activity": "view sum_of_frauds",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -438,7 +438,7 @@
 					{
 						"activity": "view count_of_frauds",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -470,7 +470,7 @@
 					{
 						"activity": "view frauds_by_year",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -503,7 +503,7 @@
 					{
 						"activity": "view frauds_by_shift_and_year",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -535,7 +535,7 @@
 					{
 						"activity": "view frauds_by_month",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -567,7 +567,7 @@
 					{
 						"activity": "view fraudulent_transactions",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],

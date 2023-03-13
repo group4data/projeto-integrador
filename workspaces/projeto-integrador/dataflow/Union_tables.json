@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "Transactions_in",
+						"referenceName": "transactions_in",
 						"type": "DatasetReference"
 					},
 					"name": "TransactionsIn"
 				},
 				{
 					"dataset": {
-						"referenceName": "Transactions_out",
+						"referenceName": "transactions_out",
 						"type": "DatasetReference"
 					},
 					"name": "TransactionsOut"
