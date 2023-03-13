@@ -1,0 +1,44 @@
+{
+	"name": "sumOfFrauds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "grop4data_sink",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "sum_of_frauds.csv",
+				"container": "outputs"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "id",
+				"type": "String"
+			},
+			{
+				"name": "cliente_id",
+				"type": "String"
+			},
+			{
+				"name": "valor",
+				"type": "String"
+			},
+			{
+				"name": "data_hora",
+				"type": "String"
+			},
+			{
+				"name": "tipo_transacao",
+				"type": "String"
+			}
+		]
+	}
+}
