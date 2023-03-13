@@ -21,12 +21,24 @@
 			],
 			"sinks": [
 				{
-					"name": "AllTransactions"
+					"name": "sink1"
+				},
+				{
+					"name": "sink2"
 				}
 			],
 			"transformations": [
 				{
-					"name": "union1"
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -52,12 +64,32 @@
 				"     limit: 25,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> TransactionsOut",
-				"TransactionsIn, TransactionsOut union(byName: true)~> union1",
-				"union1 sink(allowSchemaDrift: true,",
-				"     validateSchema: true,",
+				"TransactionsIn derive() ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          id,",
+				"          cliente_id,",
+				"          valor,",
+				"          data_hora",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     format: 'table') ~> AllTransactions"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"TransactionsOut derive() ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
+				"          id,",
+				"          cliente_id,",
+				"          valor,",
+				"          data_hora",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}
