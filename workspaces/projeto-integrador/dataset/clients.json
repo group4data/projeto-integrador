@@ -1,5 +1,5 @@
 {
-	"name": "Clients",
+	"name": "clients",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Group4Data_Database",
