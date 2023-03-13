@@ -1,5 +1,5 @@
 {
-	"name": "Transactions_in",
+	"name": "transactions_in",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Group4Data_Database",
