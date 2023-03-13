@@ -4,11 +4,27 @@
 
 Desafio final do curso de Data Engineer - Azure Cloud, ofertado pela Gama Academy, em parceria com a Accenture, no período de Janeiro a Março de 2023.
 
+## Grupo composto por :princess: :
+
+● Ana Paula Lima
+
+● Beatriz Brandão
+
+● Gabriela Nogueira
+
+● Larissa Arruda
+
+● Luana Rodrigues
+
+● Pamella Farias
+
+● Tássia Gonçalves
+
 ## Objetivo final :dart: :
 
 Desenvolver uma aplicação em Python para carga de arquivos em um banco de dados SQL e gerar relatórios estatísticos visando a descoberta de fraudes em cartão de crédito.
 
-## Dados :bar_chart: :
+## Dados :open_file_folder: :
 
 Segue um arquivo zip com vários arquivos mostrando possíveis movimentações bancárias:
 
@@ -51,3 +67,59 @@ O cartão fraudado, será aquele que tiver movimentações abaixo de 2 minutos d
 ● Análise relacional do banco de dados
 
 ● Objetivo alcançado com os relatórios apresentados no PowerBI
+
+## Organização das tarefas :memo: :
+
+https://github.com/orgs/group4data/projects/3/views/1
+
+## Iniciando o projeto :bar_chart: :
+
+1. Clonar o repósitorio;
+
+2. Fazer o download e abrir o Docker Desktop;
+
+3. Abrir pasta do projeto no VSCode; 
+
+4. Escolher "Reopen Container" no VSCode.
+
+Atenção: Para continuar funcionando, o Docker Desktop precisa estar aberto.
+
+## Configurando o Banco de Dados :inbox_tray::
+
+1. Criar um banco de dados no Portal Azure;
+
+2. Criar um arquivo chamado .env com as informações do seu banco de dados;
+
+3. Salvar o arquivo criado no repositório clonado.
+
+Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrito.
+
+## Modelo de entidade de relacionamento :
+
+
+
+## Links e Softwares utilizados :paperclip: :
+
+● VSCode: https://code.visualstudio.com/download
+
+● Spark: https://spark.apache.org/downloads.html
+
+● Python: https://www.python.org/downloads/
+
+● Docker Desktop: https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module
+
+● Jupyter Notebook: https://jupyter.org/install
+
+● SQL Server: https://learn.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio
+
+● Power BI: https://powerbi.microsoft.com/pt-br/downloads/
+
+● Portal Azure: https://portal.azure.com/#home
+
+## Referências bibliográficas:
+
+https://betterprogramming.pub/pyspark-development-made-simple-9449a893ab17
+
+https://docs.docker.com/desktop/windows/wsl/
+
+https://learn.microsoft.com/pt-br/azure/data-factory/connector-sql-server?tabs=data-factory
