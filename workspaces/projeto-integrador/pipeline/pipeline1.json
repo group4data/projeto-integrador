@@ -296,7 +296,8 @@
 					"dataset": {
 						"referenceName": "defrauded_clients",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -395,7 +396,8 @@
 					"dataset": {
 						"referenceName": "frauds_by_state",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -427,7 +429,8 @@
 					"dataset": {
 						"referenceName": "sum_of_frauds",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -460,7 +463,8 @@
 					"dataset": {
 						"referenceName": "count_of_frauds",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -492,7 +496,8 @@
 					"dataset": {
 						"referenceName": "frauds_by_year",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -525,7 +530,8 @@
 					"dataset": {
 						"referenceName": "frauds_by_shift_and_year",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -557,7 +563,8 @@
 					"dataset": {
 						"referenceName": "frauds_by_month",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -591,6 +598,39 @@
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view all_transactions",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from all_transactions",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "all_transactions",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
