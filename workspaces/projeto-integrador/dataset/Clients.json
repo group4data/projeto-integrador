@@ -1,0 +1,48 @@
+{
+	"name": "Clients",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Group4Data_Database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "nome",
+				"type": "varchar"
+			},
+			{
+				"name": "sobrenome",
+				"type": "varchar"
+			},
+			{
+				"name": "email",
+				"type": "varchar"
+			},
+			{
+				"name": "data_hora_cadastro",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "telefone",
+				"type": "varchar"
+			},
+			{
+				"name": "estado",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "clientes"
+		}
+	}
+}
