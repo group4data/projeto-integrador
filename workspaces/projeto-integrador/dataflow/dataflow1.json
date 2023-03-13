@@ -1,0 +1,55 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Transactions_in",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsIn"
+				},
+				{
+					"dataset": {
+						"referenceName": "Transactions_out",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsOut"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          id as integer,",
+				"          cliente_id as integer,",
+				"          valor as decimal(10,2),",
+				"          data_hora as timestamp",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: true,",
+				"     limit: 25,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsIn",
+				"source(output(",
+				"          id as integer,",
+				"          cliente_id as integer,",
+				"          valor as decimal(10,2),",
+				"          data_hora as timestamp",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: true,",
+				"     limit: 25,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsOut",
+				"TransactionsIn, TransactionsOut union(byName: true)~> union1"
+			]
+		}
+	}
+}
