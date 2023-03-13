@@ -19,7 +19,11 @@
 					"name": "TransactionsOut"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "AllTransactions"
+				}
+			],
 			"transformations": [
 				{
 					"name": "union1"
@@ -48,7 +52,11 @@
 				"     limit: 25,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> TransactionsOut",
-				"TransactionsIn, TransactionsOut union(byName: true)~> union1"
+				"TransactionsIn, TransactionsOut union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> AllTransactions"
 			]
 		}
 	}
