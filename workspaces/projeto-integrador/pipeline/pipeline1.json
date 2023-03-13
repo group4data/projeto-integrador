@@ -3,7 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Script1",
+				"name": "view all_transactions",
+				"description": "Criar view all_transactions a partir de consulta",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
@@ -27,6 +28,208 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "view fraudulent_transactions",
+				"description": "Criar view fraudulent_transactions a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW fraudulent_transactions AS \n  SELECT * FROM (\n  SELECT cliente_id, table_datatime_previous.id AS id_transaction, valor, data_hora, tipo_transacao\n    FROM (\n      SELECT id, cliente_id, valor, data_hora, tipo_transacao,\n        LAG(data_hora) OVER (\n          PARTITION BY cliente_id\n          ORDER BY data_hora\n        ) AS datatime_previous\n      FROM all_transactions\n    ) AS table_datatime_previous\n    JOIN clientes ON table_datatime_previous.cliente_id = clientes.id\n    WHERE datediff(SECOND, datatime_previous, data_hora) < 120\n    ) AS frauds"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view frauds_by_state",
+				"description": "Criar view frauds_by_state a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW frauds_by_state AS\n    SELECT c.estado, COUNT(ft.cliente_id) as quantidade_de_fraudes\n    FROM fraudulent_transactions ft \n    JOIN clientes c \n    ON c.id = ft.cliente_id \n    GROUP BY c.estado;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view sum_of_frauds",
+				"description": "Criar view sum_of_frauds a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW sum_of_frauds AS\n    SELECT tipo_transacao, SUM(valor) as somatorio_valor\n    FROM  fraudulent_transactions\n    GROUP BY tipo_transacao;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view count_of_frauds",
+				"description": "Criar view count_of_frauds a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW count_of_frauds AS\n    SELECT tipo_transacao, COUNT(valor) as quantidade_transacoes\n    FROM  fraudulent_transactions\n    GROUP BY tipo_transacao;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view frauds_by_year",
+				"description": "Criar view frauds_by_year a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW frauds_by_year AS\n    SELECT YEAR(data_hora) AS Ano, COUNT(*) AS frauds_by_year\n    FROM fraudulent_transactions\n    GROUP BY YEAR(data_hora);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view frauds_by_shift_and_year",
+				"description": "Criar view frauds_by_shift_and_year a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW frauds_by_shift_and_year AS\n    SELECT DATEPART(year, data_hora) AS ano, \n        CASE \n            WHEN DATEPART(hour, data_hora) BETWEEN 0 AND 5 THEN '0-6 horas'\n            WHEN DATEPART(hour, data_hora) BETWEEN 6 AND 11 THEN '6-12 horas'\n            WHEN DATEPART(hour, data_hora) BETWEEN 12 AND 17 THEN '12-18 horas'\n            WHEN DATEPART(hour, data_hora) BETWEEN 18 AND 23 THEN '18-24 horas'\n        END AS horario_transacao,\n        COUNT(*) AS quantidade_transacoes\n    FROM fraudulent_transactions\n    GROUP BY DATEPART(year, data_hora), \n            CASE \n                WHEN DATEPART(hour, data_hora) BETWEEN 0 AND 5 THEN '0-6 horas'\n                WHEN DATEPART(hour, data_hora) BETWEEN 6 AND 11 THEN '6-12 horas'\n                WHEN DATEPART(hour, data_hora) BETWEEN 12 AND 17 THEN '12-18 horas'\n                WHEN DATEPART(hour, data_hora) BETWEEN 18 AND 23 THEN '18-24 horas'\n            END;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view frauds_by_month",
+				"description": "Criar view frauds_by_month a partir de consulta",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW frauds_by_month AS\n    SELECT MONTH(data_hora) AS mes, COUNT(id_transaction) AS quantidade_de_fraudes\n    FROM fraudulent_transactions\n    GROUP BY MONTH(data_hora);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"annotations": []
