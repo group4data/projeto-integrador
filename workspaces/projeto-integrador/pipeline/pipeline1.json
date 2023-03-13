@@ -33,7 +33,14 @@
 				"name": "view fraudulent_transactions",
 				"description": "Criar view fraudulent_transactions a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "view all_transactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -60,7 +67,14 @@
 				"name": "view frauds_by_state",
 				"description": "Criar view frauds_by_state a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "view frauds_by_client",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -87,7 +101,14 @@
 				"name": "view sum_of_frauds",
 				"description": "Criar view sum_of_frauds a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Order by quantidade_de_fraudes desc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -114,7 +135,14 @@
 				"name": "view count_of_frauds",
 				"description": "Criar view count_of_frauds a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Order by somatorio_valor desc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -141,7 +169,14 @@
 				"name": "view frauds_by_year",
 				"description": "Criar view frauds_by_year a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Order by quantidade_transacoes desc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -168,7 +203,14 @@
 				"name": "view frauds_by_shift_and_year",
 				"description": "Criar view frauds_by_shift_and_year a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Order by Ano desc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -195,7 +237,14 @@
 				"name": "view frauds_by_month",
 				"description": "Criar view frauds_by_month a partir de consulta",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Order by ano",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -219,9 +268,16 @@
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "Order by cliente_id",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Create table defrauded_clients",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -229,7 +285,313 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM defrauded_clients ORDER BY cliente_id;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "defrauded_clients",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Alter table defrauded_clients",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Order by cliente_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "ALTER TABLE defrauded_clients\nADD CONSTRAINT fk_clientes_id\nFOREIGN KEY (cliente_id)\nREFERENCES clientes (id);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "view frauds_by_client",
+				"description": "",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Alter table defrauded_clients",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW frauds_by_client AS\n    SELECT c.nome, COUNT(ft.id_transaction) as quantidade_transacoes\n    FROM  fraudulent_transactions ft\n    JOIN  clientes c\n    ON c.id = ft.cliente_id \n    GROUP BY ft.cliente_id, c.nome;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Order by quantidade_de_fraudes desc",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view frauds_by_state",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM frauds_by_state\nORDER BY quantidade_de_fraudes DESC;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "frauds_by_state",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Order by somatorio_valor desc",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view sum_of_frauds",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM sum_of_frauds\nORDER BY somatorio_valor DESC;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "sum_of_frauds",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Order by quantidade_transacoes desc",
+				"description": "\n",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view count_of_frauds",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM count_of_frauds\nORDER BY quantidade_transacoes DESC;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "count_of_frauds",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Order by Ano desc",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view frauds_by_year",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM frauds_by_year\nORDER BY Ano DESC;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "frauds_by_year",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Order by ano",
+				"description": "",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view frauds_by_shift_and_year",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM frauds_by_shift_and_year\nORDER BY ano;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "frauds_by_shift_and_year",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Order by quantidade_de_fraudes_month desc",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "view frauds_by_month",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM frauds_by_month\nORDER BY quantidade_de_fraudes DESC;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "frauds_by_month",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Create table defrauded_clients",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "view fraudulent_transactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "SELECT DISTINCT(cliente_id), count(id_transaction) AS times_defrauded_client, sum(valor) AS valor_total_fraudes\nINTO defrauded_clients\nFROM fraudulent_transactions JOIN clientes ON cliente_id = clientes.id\nGROUP BY cliente_id;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
 			}
 		],
 		"annotations": []
