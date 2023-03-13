@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "Union_tables",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -21,6 +21,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "Transactions_all",
+						"type": "DatasetReference"
+					},
 					"name": "AllTransactions"
 				}
 			],
@@ -54,9 +58,22 @@
 				"     format: 'table') ~> TransactionsOut",
 				"TransactionsIn, TransactionsOut union(byName: true)~> union1",
 				"union1 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
+				"     validateSchema: true,",
+				"     input(",
+				"          id as integer,",
+				"          cliente_id as integer,",
+				"          valor as decimal(10,2),",
+				"          data_hora as timestamp,",
+				"          tipo_transacao as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> AllTransactions"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> AllTransactions"
 			]
 		}
 	}
