@@ -1,0 +1,23 @@
+{
+	"name": "allTransactions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "grop4data_sink",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "all_transactions.csv",
+				"container": "outputs"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
