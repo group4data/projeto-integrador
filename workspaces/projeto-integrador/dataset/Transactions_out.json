@@ -1,0 +1,39 @@
+{
+	"name": "Transactions_out",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Group4Data_Database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cliente_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "valor",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "data_hora",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "transactions_out"
+		}
+	}
+}
