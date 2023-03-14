@@ -15,7 +15,7 @@
 
 Uma aplicação desenvolvida em Python que possibilite a carregar arquivos em um banco de dados relacional hospedado na Azure e gerar relatórios estatísticos no PowerBI visando a descoberta de fraudes em transações bancárias.
 
-No escopo desse projeto, a fraude é caracterizada pela identificação de movimentações abaixo de 2 minutos de espaçamento entre as transações realizadas pelo mesmo cliente.
+No escopo desse projeto, fraudes são caracterizadas pela identificação de movimentações abaixo de 2 minutos de espaçamento entre transações realizadas pelo mesmo cliente.
 
 ## Objetivos :dart:
 :heavy_check_mark: Script de migração em Python  
@@ -25,13 +25,24 @@ No escopo desse projeto, a fraude é caracterizada pela identificação de movim
 
 ## Dados :open_file_folder:
 
-Segue um arquivo zip com vários arquivos mostrando possíveis movimentações bancárias:
+Os arquivos .csv referentes aos dados brutos encontram-se na pasta Data, que apresenta as subpastas Clients e Transactions.
 
-● transaction-in-001.csv, transaction-in-002.csv …
+>./Data/Clients
 
-● transaction-out-001.csv, transaction-out-002.csv …
+* clients-001.csv, clients-002.csv …  
 
-● clients-001.csv, clients-002.csv …
+|id|nome|email|data_cadastro|telefone|
+| -------- | -------- | -------- |-------- | -------- |
+
+>./Data/Transactions
+
+* transaction-in-001.csv, transaction-in-002.csv …
+
+* transaction-out-001.csv, transaction-out-002.csv …
+
+|id|cliente_id|valor|data|
+| -------- | -------- | -------- |-------- |
+
 
 [Fonte dos dados](https://drive.google.com/file/d/1nXHnNt9dj03GB42SErcrNvZOzHwOyAcx/view?usp=sharing)
 
@@ -93,7 +104,7 @@ ou rode o arquivo Jupyter Notebook: <b>jupyter_code.ipynb</b>
 
 Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrito.
 
-## Modelo de entidade de relacionamento :
+## Modelo de entidade de relacionamento
 
 
 
@@ -116,7 +127,7 @@ Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrit
 <b>Yellow Belt:</b> Ynnae Melo
 
 
-## Referências bibliográficas:
+## Referências
 
 1. [PySpark Development](https://betterprogramming.pub/pyspark-development-made-simple-9449a893ab17)
 
