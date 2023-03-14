@@ -1,0 +1,26 @@
+{
+	"name": "frauds_by_client",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Group4Data_Database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "nome",
+				"type": "varchar"
+			},
+			{
+				"name": "quantidade_transacoes",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "frauds_by_client"
+		}
+	}
+}

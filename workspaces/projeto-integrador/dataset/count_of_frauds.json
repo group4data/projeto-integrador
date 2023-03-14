@@ -1,0 +1,16 @@
+{
+	"name": "count_of_frauds",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Group4Data_Database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "count_of_frauds"
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "frauds_by_shift_and_year",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Group4Data_Database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "frauds_by_shift_and_year"
+		}
+	}
+}

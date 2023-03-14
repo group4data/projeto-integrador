@@ -1,0 +1,13 @@
+{
+	"name": "Group4Data_Database",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Tabelas com informações dos clientes e transações de um banco fictício.",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=group4data-server.database.windows.net;initial catalog=group4data_BD;user id=admin_group4data",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDJCQzQ0NjkwLUUwQTctNDJERC04MzNDLTBCNUY2NTJCNDczNV8zMTFiNDk5YS00NTE1LTQxM2MtYTk1ZC05MWM4MWNiYTY3MTMiDQp9"
+		}
+	}
+}
