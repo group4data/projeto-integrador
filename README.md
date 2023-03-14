@@ -17,6 +17,8 @@ Uma aplicação desenvolvida em Python que possibilite a carregar arquivos em um
 
 No escopo desse projeto, fraudes são caracterizadas pela identificação de movimentações abaixo de 2 minutos de espaçamento entre transações realizadas pelo mesmo cliente.
 
+O projeto consiste em um processo de ETL - Extract, Transform and Load (Extrair, Transformar e Carregar).
+
 ## Objetivos :dart:
 :heavy_check_mark: Script de migração em Python  
 :heavy_check_mark: Modelo de Entidades e Relacionamentos  
@@ -110,6 +112,23 @@ O conteúdo do arquivo deverá ser utilizado no Azure Data Studio para as análi
 * [glob](https://docs.python.org/3/library/glob.html)
 * [python-dotenv](https://pypi.org/project/python-dotenv/)
 
+## Alternativas para o processo de ETL na Azure :cloud:
+O portal Azure possui diversos recursos para a manipulação de dados, logo o processo descrito acima também pode ser realizado com a utilização destes recursos.  
+Abaixo tem-se a representação de possíveis alternativas.
+
+### Azure Data Factory - ADF
+Serviço de ETL na nuvem, sem necessidade de código, pois apresenta uma interface para o usuário.  
+
+Após a execução do código que realiza a transformação e carregamento dos DataFrames para as tabelas CLIENTS, TRANSACTIONS_IN e TRANSACTIONS_OUT no banco de dados SQL Sever hospedado na Azure, utilizou-se o Azure Data Factory para a realização das seguintes atividades: 
+1. Criação de linked service para extração dos dados do SQL Server
+2. Criação de um pipeline para inserir as atividades do processo ETL
+3. Criação de datasets para as atividades de script para criação de tabela e views, copy data para carregamento dos dados e lookup para as consultas (cada atividade somente será executada após o êxito da anterior)
+4. Criação de linked service para carregar os dados em um Storage Account (Azure Blob)
+5. Para possibilitar o uso da pipeline diversas vezes de acordo com a atualização do banco de dados, ao final da execução foram inseridas atividades de scripts com função de drop table e drop view.
+
+Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI Dashboard para a geração de relatórios através da plataforma PowerBI Desktop.
+
+
 ## Desenvolvedoras :princess:
 
 | [<img src="https://avatars.githubusercontent.com/u/94936213?v=4" width=115><br><sub>Ana Paula Lima</sub>](https://github.com/anapaaula) |  [<img src="https://avatars.githubusercontent.com/u/117690786?v=4" width=115><br><sub>Beatriz Brandão</sub>](https://github.com/biacbrandao) |  [<img src="https://avatars.githubusercontent.com/u/101880070?v=4" width=115><br><sub>Gabriela Nogueira</sub>](https://github.com/nogueiragabriela/) | [<img src="https://avatars.githubusercontent.com/u/127163325?v=4" width=115><br><sub>Larissa Arruda</sub>](https://github.com/LarissaArruda08) | [<img src="https://avatars.githubusercontent.com/u/85495937?v=4" width=115><br><sub>Luana Rodrigues</sub>](https://github.com/lurodig) | [<img src="https://avatars.githubusercontent.com/u/111579939?v=4" width=115><br><sub>Pamella Farias</sub>](https://github.com/PamellaFarias) | [<img src="https://avatars.githubusercontent.com/u/121309155?v=4" width=115><br><sub>Tássia Gonçalves</sub>](https://github.com/goncalvestassia) |
@@ -119,7 +138,7 @@ O conteúdo do arquivo deverá ser utilizado no Azure Data Studio para as análi
 
 <b>Professora:</b> Camila Ávila
 
-<b>Yellow Belt:</b> Ynnae Melo
+<b>Yellow Belt:</b> Ynnaê Melo
 
 
 ## Referências
