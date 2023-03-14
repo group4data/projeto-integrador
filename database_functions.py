@@ -10,7 +10,13 @@ def connection_database():
     username = os.environ["username"]
     password = os.environ["password"]
 
-    connection_string = f"Driver={{ODBC Driver 18 for SQL Server}};Server=tcp:{server_name},1433;Database={database_name};Uid={username};Pwd={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+    connection_string = f"Driver={{ODBC Driver 18 for SQL Server}};\
+        Server=tcp:{server_name},1433;\
+        Database={database_name};\
+        Uid={username};\
+        Pwd={password};\
+        Encrypt=yes;\
+        TrustServerCertificate=no;Connection Timeout=30;"
     return pyodbc.connect(connection_string)
 
 def create_table_clients(conn, df):
@@ -71,10 +77,3 @@ def insert_df_into_db(conn, df, name_table):
         conn.rollback()
     finally:
         cursor.close()
-
-
-
-
-
-
-

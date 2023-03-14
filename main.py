@@ -100,4 +100,3 @@ try:
     
 except Exception as e:
     print(f"Ocorreu o seguinte erro: {e}!")
-

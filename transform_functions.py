@@ -6,7 +6,6 @@ from pyspark.sql.types import *
 from pyspark.sql import functions as f
 from pyspark.sql.functions import *
 
-
 def transform_csv_to_df(spark, path, schema):
     if not os.path.isdir(path):
         raise ValueError(f"{path} não é um diretório válido.")
@@ -69,7 +68,6 @@ def add_state_column(df):
     df = df.drop('DDD')
     return df
 
-
 def format_names(df):
     df = df.withColumn("nome_split", split(df.nome, " "))
     df = df.withColumn("nome", df.nome_split[0])
@@ -87,7 +85,6 @@ def format_names(df):
     df = df.select("id", "nome", "sobrenome", "email", "data_cadastro", "telefone", "estado")
     return df
 
-
 def verify_client_id_existence(spark, df_transactions, df_clients):
     df_ids_transactions = df_transactions.select(col('cliente_id'))
     df_ids_clients = df_clients.select(col('id'))
@@ -102,7 +99,6 @@ def verify_client_id_existence(spark, df_transactions, df_clients):
     df_new_clients = df_new_clients.withColumn('estado', lit('Não localizado'))
     df_clients = df_clients.unionAll(df_new_clients)
     return df_clients
-
 
 def renamed_column(df, previous_column, new_column):
      return df.withColumnRenamed(previous_column, new_column)
