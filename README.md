@@ -126,11 +126,11 @@ Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrit
 
 
 ## Dependências e bibliotecas utilizadas :books:
-* pyspark
-* pyodc
-* os
-* glob
-* python-dotenv
+* [pyspark](https://spark.apache.org/docs/latest/api/python/)
+* [pyodc](https://pypi.org/project/pyodbc/)
+* [os](https://docs.python.org/3/library/os.html)
+* [glob](https://docs.python.org/3/library/glob.html)
+* [python-dotenv](https://pypi.org/project/python-dotenv/)
 
 ## Desenvolvedoras :princess:
 
