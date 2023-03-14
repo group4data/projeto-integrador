@@ -1,6 +1,5 @@
 # Projeto Integrador
 
-
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://docs.python.org/3.9/)
 [![PySpark](https://img.shields.io/badge/PySpark-FFFFFF?style=for-the-badge&logo=apachespark&logoColor=#E35A16)](https://spark.apache.org/docs/latest/api/python/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-F37626.svg?&style=for-the-badge&logo=Jupyter&logoColor=white)](https://docs.jupyter.org/en/latest/)
@@ -11,14 +10,18 @@
 [![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://learn.microsoft.com/en-us/azure/?product=popular)
 [![Power Bi](https://img.shields.io/badge/power_bi-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://learn.microsoft.com/en-us/power-bi/)
 
-## Sobre o projeto :id:
 
-Desafio final do curso de Data Engineer - Azure Cloud, ofertado pela Gama Academy, em parceria com a Accenture, no período de Janeiro a Março de 2023.
+## Descrição do projeto :id:
 
+Uma aplicação desenvolvida em Python que possibilite a carregar arquivos em um banco de dados relacional hospedado na Azure e gerar relatórios estatísticos no PowerBI visando a descoberta de fraudes em transações bancárias.
 
-## Objetivo final :dart:
+No escopo desse projeto, a fraude é caracterizada pela identificação de movimentações abaixo de 2 minutos de espaçamento entre as transações realizadas pelo mesmo cliente.
 
-Desenvolver uma aplicação em Python para carga de arquivos em um banco de dados SQL e gerar relatórios estatísticos visando a descoberta de fraudes em cartão de crédito.
+## Objetivos :dart:
+:heavy_check_mark: Script de migração em Python  
+:heavy_check_mark: Modelo de Entidades e Relacionamentos  
+:heavy_check_mark: Relatórios de análise em SQL e PowerBI  
+:heavy_check_mark: Versionamento do código e documentação  
 
 ## Dados :open_file_folder:
 
@@ -32,37 +35,6 @@ Segue um arquivo zip com vários arquivos mostrando possíveis movimentações b
 
 [Fonte dos dados](https://drive.google.com/file/d/1nXHnNt9dj03GB42SErcrNvZOzHwOyAcx/view?usp=sharing)
 
-## Instruções :bulb:
-
-O objetivo inicial é analisar estes arquivos criando uma base de dados relacional para fazer a carga e depois analisá-la. 
-
-O cartão fraudado, será aquele que tiver movimentações abaixo de 2 minutos de espaçamento entre as transações.
-
-## O que é esperado do projeto :warning:
-
-● Script de migração em Python
-
-● Modelo de Entidades e Relacionamentos
-
-● Relatórios de análise em SQL e PowerBI
-
-● Códigos versionados no github.com
-
-## O que será avaliado :eyes:
-
-● Semântica do código
-
-● Lógica desenvolvida
-
-● Organização do sistema migratório
-
-● Documentação de utilização
-
-● Hospedagem do sistema (nuvem Azure) para rodar os Scripts
-
-● Análise relacional do banco de dados
-
-● Objetivo alcançado com os relatórios apresentados no PowerBI
 
 ## Organização das tarefas :memo:
 
@@ -146,7 +118,7 @@ Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrit
 
 ## Referências bibliográficas:
 
-1. [PySpark Delelopment](https://betterprogramming.pub/pyspark-development-made-simple-9449a893ab17)
+1. [PySpark Development](https://betterprogramming.pub/pyspark-development-made-simple-9449a893ab17)
 
 2. [WSL](https://docs.docker.com/desktop/windows/wsl/)
 
