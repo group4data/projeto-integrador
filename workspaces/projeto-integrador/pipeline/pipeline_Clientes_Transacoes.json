@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "pipeline_Clientes_Transacoes",
 	"properties": {
 		"activities": [
 			{
