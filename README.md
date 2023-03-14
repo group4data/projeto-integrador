@@ -106,6 +106,7 @@ Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrit
 
 ## Modelo de entidade de relacionamento
 
+## Relatório no PowerBI :bar_chart:
 
 
 ## Dependências e bibliotecas utilizadas :books:
