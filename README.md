@@ -72,17 +72,34 @@ O cartão fraudado, será aquele que tiver movimentações abaixo de 2 minutos d
 
 https://github.com/orgs/group4data/projects/3/views/1
 
-## Iniciando o projeto :bar_chart: :
+## Pré-requisitos
+Antes de rodar a aplicação, verifique se possui os seguintes itens instalados na máquina:
+* [<b>Git</b>](https://git-scm.com/download/)
+* [<b>Docker</b>](https://docs.docker.com/get-docker/)
+* Uma IDE que possibilite rodar um Docker Container.  
+<i>Sugestão</i>: [<b>Visual Sutdio Code</b>](https://code.visualstudio.com/download) com as extensões Docker e Dev Container.
 
-1. Clonar o repósitorio;
+:warning: O <b>Docker</b> precisa ser iniciado antes de rodar a aplicação
 
-2. Fazer o download e abrir o Docker Desktop;
+## Como rodar a aplicação :arrow_forward:
 
-3. Abrir pasta do projeto no VSCode; 
-
-4. Escolher "Reopen Container" no VSCode.
-
-Atenção: Para continuar funcionando, o Docker Desktop precisa estar aberto.
+1. Clonar o repósitorio usando o terminal;
+```
+git clone git@github.com:group4data/projeto-integrador.git
+```
+2. Vá para o diretório do projeto; 
+```
+cd ./projeto-integrador/
+```
+3. Abra a pasta do projeto no VSCode;
+```
+code .
+```
+4. Pressione <b>F1</b> e digite <b>Dev Containers: Reopen in Container</b> e escolha a opção <b>From 'Dockerfiler'</b>.
+5. Abra o terminal e rode o script
+```
+python3 main.py
+```
 
 ## Configurando o Banco de Dados :inbox_tray::
 
