@@ -30,7 +30,7 @@ Segue um arquivo zip com vários arquivos mostrando possíveis movimentações b
 
 ● clients-001.csv, clients-002.csv …
 
-● Link Download: https://drive.google.com/file/d/1nXHnNt9dj03GB42SErcrNvZOzHwOyAcx/view?usp=sharing
+[Fonte dos dados](https://drive.google.com/file/d/1nXHnNt9dj03GB42SErcrNvZOzHwOyAcx/view?usp=sharing)
 
 ## Instruções :bulb:
 
@@ -66,7 +66,7 @@ O cartão fraudado, será aquele que tiver movimentações abaixo de 2 minutos d
 
 ## Organização das tarefas :memo:
 
-https://github.com/orgs/group4data/projects/3/views/1
+[Quadro de Gerenciamento do Projeto](https://github.com/orgs/group4data/projects/3/views/1)
 
 ## Pré-requisitos
 Antes de rodar a aplicação, verifique se possui os seguintes itens instalados na máquina:
@@ -93,7 +93,18 @@ code .
 ```
 4. Pressione <b>F1</b> e digite <b>Dev Containers: Reopen in Container</b> e escolha a opção <b>From 'Dockerfiler'</b>. 
 <i>Obs</i>: A construção do container poderá ser demorada.
-5. Abra o terminal e rode o script principal
+
+5. Adicione as variáveis de ambiente em arquivo .env para configurar os acessos necessários de acordo com o conteúdo do arquivo .env.example
+
+```dosini
+# .env.example
+server_name =
+database_name =
+username =
+password =
+```
+
+6. Abra o terminal e rode o script principal
 ```
 python3 main.py
 ```
@@ -135,8 +146,8 @@ Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrit
 
 ## Referências bibliográficas:
 
-https://betterprogramming.pub/pyspark-development-made-simple-9449a893ab17
+1. [PySpark Delelopment](https://betterprogramming.pub/pyspark-development-made-simple-9449a893ab17)
 
-https://docs.docker.com/desktop/windows/wsl/
+2. [WSL](https://docs.docker.com/desktop/windows/wsl/)
 
-https://learn.microsoft.com/pt-br/azure/data-factory/connector-sql-server?tabs=data-factory
+3. [Azure Data Factory](https://learn.microsoft.com/pt-br/azure/data-factory/connector-sql-server?tabs=data-factory)
