@@ -54,11 +54,11 @@ Os arquivos .csv referentes aos dados brutos encontram-se na pasta Data, que apr
 ## Pré-requisitos
 Antes de rodar a aplicação, verifique se possui os seguintes itens instalados na máquina:
 * [<b>Git</b>](https://git-scm.com/download/)
-* [<b>Docker</b>](https://docs.docker.com/get-docker/)
+* [<b>Docker Desktop</b>](https://docs.docker.com/get-docker/)
 * Uma IDE que possibilite rodar um Docker Container.  
 <i>Sugestão</i>: [<b>Visual Studio Code</b>](https://code.visualstudio.com/download) com as extensões Docker e Dev Container.
 
-:warning: O <b>Docker</b> precisa ser iniciado antes de rodar a aplicação
+:warning: O <b>Docker</b> precisa ser iniciado antes de abrir o container no VSCode.
 
 ## Como rodar a aplicação :arrow_forward:
 
@@ -77,7 +77,8 @@ code .
 4. Pressione <b>F1</b> e digite <b>Dev Containers: Reopen in Container</b> e escolha a opção <b>From 'Dockerfiler'</b>.  
 <i>Obs</i>: A construção do container poderá ser demorada.
 
-5. Adicione as variáveis de ambiente em arquivo .env para configurar os acessos necessários de acordo com o conteúdo do arquivo .env.example
+5. Adicione as variáveis de ambiente em arquivo .env para configurar os acessos necessários de acordo com o conteúdo do arquivo .env.example  
+<i>Obs</i>: As informações de acesso referentes ao servidor e banco de dados hospedados na nuvem podem ser encontradas no portal da Azure. Certique-se de ter acesso liberado pelo IP da máquina utilizada no firewall do servidor antes de rodar a aplicação.
 
 ```dosini
 # .env.example
@@ -93,18 +94,11 @@ python3 main.py
 ```
 ou rode o arquivo Jupyter Notebook: <b>jupyter_code.ipynb</b>
 
-
-## Configurando o Banco de Dados :inbox_tray:
-
-1. Criar um banco de dados no Portal Azure;
-
-2. Criar um arquivo chamado .env com as informações do seu banco de dados;
-
-3. Salvar o arquivo criado no repositório clonado.
-
-Obs.: No repositório encontra-se um arquivo exemplificando como deve ser escrito.
-
 ## Modelo de entidade de relacionamento
+
+## Consultas e Análises no Banco de Dados SQL Server na [Azure Data Studio](https://azure.microsoft.com/pt-br/products/data-studio) :inbox_tray:
+No arquivo sql_query.sql encontra-se o script das consultas e análises realizadas no banco de dados, incluindo a criação da tabela defrauded_clients.  
+O conteúdo do arquivo deverá ser utilizado no Azure Data Studio para as análises.
 
 ## Relatório no PowerBI :bar_chart:
 
