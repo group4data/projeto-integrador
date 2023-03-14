@@ -24,7 +24,9 @@ INTO defrauded_clients
 FROM fraudulent_transactions JOIN clientes ON cliente_id = clientes.id
 GROUP BY cliente_id;
 
-SELECT * FROM defrauded_clients ORDER BY cliente_id;
+SELECT * 
+FROM defrauded_clients 
+ORDER BY cliente_id;
 
 ALTER TABLE defrauded_clients
 ADD CONSTRAINT fk_clientes_id
@@ -38,7 +40,20 @@ CREATE VIEW frauds_by_client AS
     ON c.id = ft.cliente_id 
     GROUP BY ft.cliente_id, c.nome;
 
-DROP VIEW frauds_by_client;
+SELECT * 
+FROM frauds_by_client
+ORDER BY quantidade_transacoes DESC;
+
+CREATE VIEW sum_frauds_by_client AS
+    SELECT c.nome, SUM(ft.valor) as valor_total_fraudes
+    FROM  fraudulent_transactions ft
+    JOIN  clientes c
+    ON c.id = ft.cliente_id 
+    GROUP BY ft.cliente_id, c.nome;
+
+SELECT * 
+FROM sum_frauds_by_client
+ORDER BY valor_total_fraudes DESC;
 
 CREATE VIEW frauds_by_state AS
     SELECT c.estado, COUNT(ft.cliente_id) as quantidade_de_fraudes
