@@ -79,19 +79,19 @@ Antes de rodar a aplicação, verifique se possui os seguintes itens instalados 
 
 ## Como rodar a aplicação :arrow_forward:
 
-1. Clonar o repósitorio usando o terminal;
+1. Clonar o repósitorio usando o terminal
 ```
 git clone git@github.com:group4data/projeto-integrador.git
 ```
-2. Vá para o diretório do projeto; 
+2. Vá para o diretório do projeto
 ```
 cd ./projeto-integrador/
 ```
-3. Abra a pasta do projeto no VSCode;
+3. Abra a pasta do projeto no VSCode
 ```
 code .
 ```
-4. Pressione <b>F1</b> e digite <b>Dev Containers: Reopen in Container</b> e escolha a opção <b>From 'Dockerfiler'</b>. 
+4. Pressione <b>F1</b> e digite <b>Dev Containers: Reopen in Container</b> e escolha a opção <b>From 'Dockerfiler'</b>.  
 <i>Obs</i>: A construção do container poderá ser demorada.
 
 5. Adicione as variáveis de ambiente em arquivo .env para configurar os acessos necessários de acordo com o conteúdo do arquivo .env.example
