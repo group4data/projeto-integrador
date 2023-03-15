@@ -144,8 +144,80 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
 
 ## Desenvolvedoras :princess:
 
-| [<img src="https://avatars.githubusercontent.com/u/94936213?v=4" width=200px><br><sub>Ana Paula Lima</sub>](https://github.com/anapaaula)[<br><sub>LinkedIn</sub>]() |  [<img src="https://avatars.githubusercontent.com/u/117690786?v=4" width=200px><br><sub>Beatriz Brandão</sub>](https://github.com/biacbrandao)[<br><sub>LinkedIn</sub>](https://www.linkedin.com/in/beatrizcbrandao/) |  [<img src="https://avatars.githubusercontent.com/u/101880070?v=4" width=200px><br><sub>Gabriela Nogueira</sub>](https://github.com/nogueiragabriela/)[<br><sub>LinkedIn</sub>](https://www.linkedin.com/in/gabriela-nogueira-dev/) | [<img src="https://avatars.githubusercontent.com/u/127163325?v=4" width=200px><br><sub>Larissa Arruda</sub>](https://github.com/LarissaArruda08)[<br><sub>LinkedIn</sub>]() | [<img src="https://avatars.githubusercontent.com/u/85495937?v=4" width=200px><br><sub>Luana Rodrigues</sub>](https://github.com/lurodig)[<br><sub>LinkedIn</sub>]() | [<img src="https://avatars.githubusercontent.com/u/111579939?v=4" width=200px><br><sub>Pamella Farias</sub>](https://github.com/PamellaFarias)[<br><sub>LinkedIn</sub>]() | [<img src="https://avatars.githubusercontent.com/u/121309155?v=4" width=200px><br><sub>Tássia Gonçalves</sub>](https://github.com/goncalvestassia)[<br><sub>LinkedIn</sub>]() |
-| :----: | :----: | :----: | :----: | :----: | :----: | :----: |
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://github.com/anapaaula">
+        <img src="https://avatars.githubusercontent.com/u/94936213?v=4" width="200px;" alt="Foto de Ana Paula Lima"/><br>
+        <a href="https://br.linkedin.com/in/anapaula-lsantos">
+          <sub>
+            <b>Ana Paula Lima</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/biacbrandao">
+        <img src="https://avatars.githubusercontent.com/u/117690786?v=4" width="200px;" alt="Foto de Beatriz Brandão"/><br>
+        <a href="https://www.linkedin.com/in/beatrizcbrandao/">
+          <sub>
+            <b>Beatriz Brandão</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/nogueiragabriela/">
+        <img src="https://avatars.githubusercontent.com/u/101880070?v=4" width="200px;" alt="Foto de Gabriela Nogueira"/><br>
+        <a href="https://www.linkedin.com/in/gabriela-nogueira-dev/">
+          <sub>
+            <b>Gabriela Nogueira</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/LarissaArruda08">
+        <img src="https://avatars.githubusercontent.com/u/127163325?v=4" width="200px;" alt="Foto de Larissa Arruda"/><br>
+        <a href="https://www.linkedin.com/in/larissa-arruda-2aa9251a5/">
+          <sub>
+            <b>Larissa Arruda</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/lurodig">
+        <img src="https://avatars.githubusercontent.com/u/85495937?v=4" width="200px;" alt="Foto de Luana Rodrigues"/><br>
+        <a href="">
+          <sub>
+            <b>Luana Rodrigues</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/PamellaFarias">
+        <img src="https://avatars.githubusercontent.com/u/111579939?v=4" width="200px;" alt="Foto de Pamella Farias"/><br>
+        <a href="">
+          <sub>
+            <b>Pamella Farias</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/goncalvestassia">
+        <img src="https://avatars.githubusercontent.com/u/121309155?v=4" width="200px;" alt="Foto de Tássia Gonçalves"/><br>
+        <a href="https://www.linkedin.com/in/t%C3%A1ssia-gon%C3%A7alves-5244b1166/?originalSubdomain=br">
+          <sub>
+            <b>Tássia Gonçalves</b>
+          </sub>
+        </a>
+      </a>
+    </td>
+    </tr>
+</table>
 
 <b>Orientador:</b> Danilo Aparecido dos Santos
 
