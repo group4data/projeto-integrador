@@ -47,13 +47,13 @@ def verify_empty_data(df):
     return df
 
 def correcting_data(df):
-    df = df.withColumn("valor", round(col("valor"), 2))
-    df = df.withColumn('valor', expr('abs(valor)'))
+    df = df.withColumn("value", round(col("value"), 2))
+    df = df.withColumn("value", expr('abs(value)'))
     return df
 
 def add_state_column(df):
-    df = df.withColumn('DDD', split(df['telefone'], r'[()]+').getItem(1))
-    df = df.withColumn('estado', when(col('DDD') == '20', 'Paraíba')
+    df = df.withColumn('DDD', split(df['phone_number'], r'[()]+').getItem(1))
+    df = df.withColumn('state', when(col('DDD') == '20', 'Paraíba')
                         .when(col('DDD') == '21', 'Rio de Janeiro')
                         .when(col('DDD') == '22', 'Mato Grosso')
                         .when(col('DDD') == '23', 'Pernambuco')
@@ -69,34 +69,34 @@ def add_state_column(df):
     return df
 
 def format_names(df):
-    df = df.withColumn("nome_split", split(df.nome, " "))
-    df = df.withColumn("nome", df.nome_split[0])
-    df = df.withColumn("sobrenome1", df.nome_split[1])
-    df = df.withColumn("sobrenome2", df.nome_split[2])
-    df = df.withColumn("sobrenome3", df.nome_split[3])
-    df = df.withColumn("sobrenome4", df.nome_split[4])
-    df = df.withColumn("sobrenome5", df.nome_split[5])
-    df = df.withColumn("sobrenome6", df.nome_split[6])
-    df = df.withColumn("sobrenome", concat_ws(" ", "sobrenome1", "sobrenome2", "sobrenome3", "sobrenome4", "sobrenome5", "sobrenome6"))
-    df = df.drop("nome_split", "sobrenome1", "sobrenome2", "sobrenome3", "sobrenome4", "sobrenome5", "sobrenome6")
-    df = df.withColumn("nome", initcap(df.nome))
-    df = df.withColumn("sobrenome", initcap(df.sobrenome))
-    df = df.withColumn("sobrenome", when(df.sobrenome == "", "Não informado").otherwise(df.sobrenome))
-    df = df.select("id", "nome", "sobrenome", "email", "data_cadastro", "telefone", "estado")
+    df = df.withColumn("name_split", split(df.name, " "))
+    df = df.withColumn("name", df.name_split[0])
+    df = df.withColumn("last_name1", df.name_split[1])
+    df = df.withColumn("last_name2", df.name_split[2])
+    df = df.withColumn("last_name3", df.name_split[3])
+    df = df.withColumn("last_name4", df.name_split[4])
+    df = df.withColumn("last_name5", df.name_split[5])
+    df = df.withColumn("last_name6", df.name_split[6])
+    df = df.withColumn("last_name", concat_ws(" ", "last_name1", "last_name2", "last_name3", "last_name4", "last_name5", "last_name6"))
+    df = df.drop("name_split", "last_name1", "last_name2", "last_name3", "last_name4", "last_name5", "last_name6")
+    df = df.withColumn("name", initcap(df.name))
+    df = df.withColumn("last_name", initcap(df.last_name))
+    df = df.withColumn("last_name", when(df.last_name == "", "Não informado").otherwise(df.last_name))
+    df = df.select("id", "name", "last_name", "email", "date_time_register", "phone_number", "state")
     return df
 
 def verify_client_id_existence(spark, df_transactions, df_clients):
-    df_ids_transactions = df_transactions.select(col('cliente_id'))
+    df_ids_transactions = df_transactions.select(col('client_id'))
     df_ids_clients = df_clients.select(col('id'))
-    df_new_clients = df_ids_transactions.join(df_ids_clients, df_ids_transactions.cliente_id == df_ids_clients.id, "leftanti")
+    df_new_clients = df_ids_transactions.join(df_ids_clients, df_ids_transactions.client_id == df_ids_clients.id, "leftanti")
     df_new_clients = df_new_clients.distinct()
-    df_new_clients = df_new_clients.withColumnRenamed("cliente_id", "id")
-    df_new_clients = df_new_clients.withColumn('nome', lit('Não localizado'))
-    df_new_clients = df_new_clients.withColumn('sobrenome', lit('Não localizado'))
+    df_new_clients = df_new_clients.withColumnRenamed("client_id", "id")
+    df_new_clients = df_new_clients.withColumn('name', lit('Não localizado'))
+    df_new_clients = df_new_clients.withColumn('last_name', lit('Não localizado'))
     df_new_clients = df_new_clients.withColumn('email', lit('Não localizado'))
-    df_new_clients = df_new_clients.withColumn('data_cadastro', lit('1900-01-01 00:00:00').cast('timestamp'))
-    df_new_clients = df_new_clients.withColumn('telefone', lit('Não localizado'))
-    df_new_clients = df_new_clients.withColumn('estado', lit('Não localizado'))
+    df_new_clients = df_new_clients.withColumn('date_time_register', lit('1900-01-01 00:00:00').cast('timestamp'))
+    df_new_clients = df_new_clients.withColumn('phone_number', lit('Não localizado'))
+    df_new_clients = df_new_clients.withColumn('state', lit('Não localizado'))
     df_clients = df_clients.unionAll(df_new_clients)
     return df_clients
 

@@ -38,6 +38,20 @@ try:
     df_transactions_out = transform_csv_to_df(spark, transactions_out , transactions_schema)
     print("OK")
 
+    print("Renomeando as colunas dos DataFrames...")
+    df_clients = renamed_column(df_clients,"nome", "name")
+    df_clients = renamed_column(df_clients,"data_cadastro", "date_time_register")
+    df_clients = renamed_column(df_clients,"telefone", "phone_number")
+
+    df_transactions_in = renamed_column(df_transactions_in, "cliente_id", "client_id")
+    df_transactions_in = renamed_column(df_transactions_in, "valor", "value")
+    df_transactions_in = renamed_column(df_transactions_in, "data", "date_time")
+
+    df_transactions_out = renamed_column(df_transactions_out, "cliente_id", "client_id")
+    df_transactions_out = renamed_column(df_transactions_out, "valor", "value")
+    df_transactions_out = renamed_column(df_transactions_out, "data", "date_time")
+    print("OK")
+
     print("Verificando se há dados não informados nas colunas dos DataFrames...")
     df_clients = verify_empty_data(df_clients)
     df_transactions_in = verify_empty_data(df_transactions_in)
@@ -56,12 +70,6 @@ try:
     df_clients = verify_client_id_existence(spark, df_transactions_out, df_clients)
     print("OK")
     
-    print("Alterando o nome das colunas de data e hora dos DataFrames...")
-    df_clients = renamed_column(df_clients,"data_cadastro", "data_hora_cadastro")
-    df_transactions_in = renamed_column(df_transactions_in, "data", "data_hora")
-    df_transactions_out = renamed_column(df_transactions_out, "data", "data_hora")
-    print("OK")
-
     try:
         print("Conectando com o banco de dados...")
         conn = connection_database()
@@ -73,7 +81,7 @@ try:
         create_table_clients(conn, df_clients)
         
         print("\nInserindo dados na tabela...")
-        insert_df_into_db(conn, df_clients, "clientes")
+        insert_df_into_db(conn, df_clients, "clients")
             
         print("\nCriando a tabela de transações in no banco de dados!")
         create_table_transactions(conn, df_transactions_in, "transactions_in")

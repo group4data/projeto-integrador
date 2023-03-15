@@ -21,16 +21,16 @@ def connection_database():
 
 def create_table_clients(conn, df):
     cursor = conn.cursor()
-    cursor.execute(f"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'clientes'")
+    cursor.execute(f"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'clients'")
     if cursor.fetchone()[0] == 0:
-        create_table_query = f"CREATE TABLE clientes (\
+        create_table_query = f"CREATE TABLE clients (\
                                     id INTEGER PRIMARY KEY,\
-                                    nome VARCHAR(255),\
-                                    sobrenome VARCHAR(255),\
+                                    name VARCHAR(255),\
+                                    last_name VARCHAR(255),\
                                     email VARCHAR(255),\
-                                    data_hora_cadastro DATETIME,\
-                                    telefone VARCHAR(255),\
-                                    estado VARCHAR(255)\
+                                    date_time_register DATETIME,\
+                                    phone_number VARCHAR(255),\
+                                    state VARCHAR(255)\
                                     );"
 
         cursor.execute(create_table_query)
@@ -45,9 +45,9 @@ def create_table_transactions(conn, df, name_table):
     if cursor.fetchone()[0] == 0:
         create_table_query = f"CREATE TABLE {name_table} (\
                                 id INTEGER PRIMARY KEY,\
-                                cliente_id INTEGER REFERENCES clientes (id),\
-                                valor DECIMAL(10,2),\
-                                data_hora DATETIME,\
+                                client_id INTEGER REFERENCES clients (id),\
+                                value DECIMAL(10,2),\
+                                date_time DATETIME,\
                             );"
 
         cursor.execute(create_table_query)
