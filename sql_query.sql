@@ -1,43 +1,43 @@
 CREATE VIEW all_transactions AS 
   SELECT * FROM ( 
-    SELECT id, cliente_id, valor, data_hora, 'in' AS tipo_transacao FROM transactions_in
+    SELECT id, client_id, value, date_time, 'in' AS transaction_type FROM transactions_in
     UNION ALL
-    SELECT id, cliente_id, valor, data_hora, 'out' AS tipo_transacao FROM transactions_out) AS transactions;
+    SELECT id, client_id, value, date_time, 'out' AS transaction_type FROM transactions_out) AS transactions;
 
 CREATE VIEW fraudulent_transactions AS 
   SELECT * FROM (
-  SELECT cliente_id, table_datatime_previous.id AS id_transaction, valor, data_hora, tipo_transacao
+  SELECT client_id, table_datatime_previous.id AS id_transaction, value, date_time, transaction_type
     FROM (
-      SELECT id, cliente_id, valor, data_hora, tipo_transacao,
-        LAG(data_hora) OVER (
-          PARTITION BY cliente_id
-          ORDER BY data_hora
+      SELECT id, client_id, value, date_time, transaction_type,
+        LAG(date_time) OVER (
+          PARTITION BY client_id
+          ORDER BY date_time
         ) AS datatime_previous
       FROM all_transactions
     ) AS table_datatime_previous
-    JOIN clientes ON table_datatime_previous.cliente_id = clientes.id
-    WHERE datediff(SECOND, datatime_previous, data_hora) < 120
+    JOIN clients ON table_datatime_previous.client_id = clients.id
+    WHERE datediff(SECOND, datatime_previous, date_time) < 120
     ) AS frauds
 
 SELECT *
 INTO frauds_transactions_out 
 FROM fraudulent_transactions
-WHERE tipo_transacao = 'out';
+WHERE transaction_type = 'out';
 
 SELECT *
 INTO frauds_transactions_in 
 FROM fraudulent_transactions
-WHERE tipo_transacao = 'in';
+WHERE transaction_type = 'in';
 
 ALTER TABLE frauds_transactions_in
-ADD CONSTRAINT fk_clientes_id
-FOREIGN KEY (cliente_id)
-REFERENCES clientes (id);
+ADD CONSTRAINT fk_clients_id
+FOREIGN KEY (client_id)
+REFERENCES clients (id);
 
 ALTER TABLE frauds_transactions_out
-ADD CONSTRAINT fk_clientes_id_out
-FOREIGN KEY (cliente_id)
-REFERENCES clientes (id);
+ADD CONSTRAINT fk_clients_id_out
+FOREIGN KEY (client_id)
+REFERENCES clients (id);
 
 ALTER TABLE frauds_transactions_out
 ADD CONSTRAINT fk_transactions_id_out
@@ -49,89 +49,89 @@ ADD CONSTRAINT fk_transactions_id_in
 FOREIGN KEY (id_transaction)
 REFERENCES transactions_in (id);
 
-SELECT * FROM frauds_transactions_in ORDER BY cliente_id;
-SELECT * FROM frauds_transactions_out ORDER BY cliente_id;
+SELECT * FROM frauds_transactions_in ORDER BY client_id;
+SELECT * FROM frauds_transactions_out ORDER BY client_id;
 
 CREATE VIEW frauds_by_client AS
-    SELECT c.nome, c.id, COUNT(ft.id_transaction) as quantidade_transacoes, SUM(valor) as valor_total_fraudes
+    SELECT c.name, c.id, COUNT(ft.id_transaction) as qty_of_transactions, SUM(value) as value_total_frauds
     FROM  fraudulent_transactions ft
-    JOIN  clientes c
-    ON c.id = ft.cliente_id 
-    GROUP BY ft.cliente_id, c.nome, c.id;
+    JOIN  clients c
+    ON c.id = ft.client_id 
+    GROUP BY ft.client_id, c.name, c.id;
 
 SELECT * 
 FROM frauds_by_client
-ORDER BY quantidade_transacoes DESC;
+ORDER BY qty_of_transactions DESC;
 
 SELECT * 
 FROM frauds_by_client 
-ORDER BY valor_total_fraudes DESC;
+ORDER BY value_total_frauds DESC;
 
 CREATE VIEW frauds_by_state AS
-    SELECT c.estado, COUNT(ft.cliente_id) as quantidade_de_fraudes
+    SELECT c.state, COUNT(ft.client_id) as qty_of_frauds
     FROM fraudulent_transactions ft 
-    JOIN clientes c 
-    ON c.id = ft.cliente_id 
-    GROUP BY c.estado;
+    JOIN clients c 
+    ON c.id = ft.client_id 
+    GROUP BY c.state;
 
 SELECT * 
 FROM frauds_by_state
-ORDER BY quantidade_de_fraudes DESC;
+ORDER BY qty_of_frauds DESC;
 
 CREATE VIEW sum_of_frauds AS
-    SELECT tipo_transacao, SUM(valor) as somatorio_valor
+    SELECT transaction_type, SUM(value) as sum_value
     FROM  fraudulent_transactions
-    GROUP BY tipo_transacao;
+    GROUP BY transaction_type;
 
 SELECT * 
 FROM sum_of_frauds
-ORDER BY somatorio_valor DESC;
+ORDER BY sum_value DESC;
 
 CREATE VIEW count_of_frauds AS
-    SELECT tipo_transacao, COUNT(valor) as quantidade_transacoes
+    SELECT transaction_type, COUNT(value) as qty_of_transactions
     FROM  fraudulent_transactions
-    GROUP BY tipo_transacao;
+    GROUP BY transaction_type;
 
 SELECT * 
 FROM count_of_frauds
-ORDER BY quantidade_transacoes DESC;
+ORDER BY qty_of_transactions DESC;
 
 CREATE VIEW frauds_by_year AS
-    SELECT YEAR(data_hora) AS Ano, COUNT(*) AS frauds_by_year
+    SELECT YEAR(date_time) AS Year, COUNT(*) AS frauds_by_year
     FROM fraudulent_transactions
-    GROUP BY YEAR(data_hora);
+    GROUP BY YEAR(date_time);
 
 SELECT * 
 FROM frauds_by_year
-ORDER BY Ano DESC;
+ORDER BY Year DESC;
 
 CREATE VIEW frauds_by_shift_and_year AS
-    SELECT DATEPART(year, data_hora) AS ano, 
+    SELECT DATEPART(year, date_time) AS Year, 
         CASE 
-            WHEN DATEPART(hour, data_hora) BETWEEN 0 AND 5 THEN '0-6 horas'
-            WHEN DATEPART(hour, data_hora) BETWEEN 6 AND 11 THEN '6-12 horas'
-            WHEN DATEPART(hour, data_hora) BETWEEN 12 AND 17 THEN '12-18 horas'
-            WHEN DATEPART(hour, data_hora) BETWEEN 18 AND 23 THEN '18-24 horas'
-        END AS horario_transacao,
-        COUNT(*) AS quantidade_transacoes
+            WHEN DATEPART(hour, date_time) BETWEEN 0 AND 5 THEN '0-6 hours'
+            WHEN DATEPART(hour, date_time) BETWEEN 6 AND 11 THEN '6-12 hours'
+            WHEN DATEPART(hour, date_time) BETWEEN 12 AND 17 THEN '12-18 hours'
+            WHEN DATEPART(hour, date_time) BETWEEN 18 AND 23 THEN '18-24 hours'
+        END AS transaction_time,
+        COUNT(*) AS qty_of_transactions
     FROM fraudulent_transactions
-    GROUP BY DATEPART(year, data_hora), 
+    GROUP BY DATEPART(year, date_time), 
             CASE 
-                WHEN DATEPART(hour, data_hora) BETWEEN 0 AND 5 THEN '0-6 horas'
-                WHEN DATEPART(hour, data_hora) BETWEEN 6 AND 11 THEN '6-12 horas'
-                WHEN DATEPART(hour, data_hora) BETWEEN 12 AND 17 THEN '12-18 horas'
-                WHEN DATEPART(hour, data_hora) BETWEEN 18 AND 23 THEN '18-24 horas'
+                WHEN DATEPART(hour, date_time) BETWEEN 0 AND 5 THEN '0-6 hours'
+                WHEN DATEPART(hour, date_time) BETWEEN 6 AND 11 THEN '6-12 hours'
+                WHEN DATEPART(hour, date_time) BETWEEN 12 AND 17 THEN '12-18 hours'
+                WHEN DATEPART(hour, date_time) BETWEEN 18 AND 23 THEN '18-24 hours'
             END;
 
 SELECT * 
 FROM frauds_by_shift_and_year
-ORDER BY ano;
+ORDER BY Year;
 
 CREATE VIEW frauds_by_month AS
-    SELECT MONTH(data_hora) AS mes, COUNT(id_transaction) AS quantidade_de_fraudes
+    SELECT MONTH(date_time) AS month, COUNT(id_transaction) AS qty_of_frauds
     FROM fraudulent_transactions
-    GROUP BY MONTH(data_hora);
+    GROUP BY MONTH(date_time);
 
 SELECT * 
 FROM frauds_by_month
-ORDER BY quantidade_de_fraudes DESC;
+ORDER BY qty_of_frauds DESC;
