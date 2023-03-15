@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "view all_transactions",
-				"description": "Criar view all_transactions a partir de consulta",
+				"description": "",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
@@ -23,7 +23,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "CREATE VIEW all_transactions AS \n  SELECT * FROM ( \n    SELECT id, cliente_id, valor, data_hora, 'in' AS tipo_transacao FROM transactions_in\n    UNION ALL\n    SELECT id, cliente_id, valor, data_hora, 'out' AS tipo_transacao FROM transactions_out) AS transactions;"
+							"text": "CREATE VIEW all_transactions AS \n  SELECT * FROM ( \n    SELECT id, client_id, value, date_time, 'in' AS transaction_type FROM transactions_in\n    UNION ALL\n    SELECT id, client_id, value, date_time, 'out' AS transaction_type FROM transactions_out) AS transactions;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -31,7 +31,7 @@
 			},
 			{
 				"name": "view fraudulent_transactions",
-				"description": "Criar view fraudulent_transactions a partir de consulta",
+				"description": "",
 				"type": "Script",
 				"dependsOn": [
 					{
@@ -57,7 +57,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "CREATE VIEW fraudulent_transactions AS \n  SELECT * FROM (\n  SELECT cliente_id, table_datatime_previous.id AS id_transaction, valor, data_hora, tipo_transacao\n    FROM (\n      SELECT id, cliente_id, valor, data_hora, tipo_transacao,\n        LAG(data_hora) OVER (\n          PARTITION BY cliente_id\n          ORDER BY data_hora\n        ) AS datatime_previous\n      FROM all_transactions\n    ) AS table_datatime_previous\n    JOIN clientes ON table_datatime_previous.cliente_id = clientes.id\n    WHERE datediff(SECOND, datatime_previous, data_hora) < 120\n    ) AS frauds"
+							"text": "CREATE VIEW fraudulent_transactions AS \n  SELECT * FROM (\n  SELECT client_id, table_datatime_previous.id AS id_transaction, value, date_time, transaction_type\n    FROM (\n      SELECT id, client_id, value, date_time, transaction_type,\n        LAG(date_time) OVER (\n          PARTITION BY client_id\n          ORDER BY date_time\n        ) AS datatime_previous\n      FROM all_transactions\n    ) AS table_datatime_previous\n    JOIN clients ON table_datatime_previous.client_id = clients.id\n    WHERE datediff(SECOND, datatime_previous, date_time) < 120\n    ) AS frauds"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -570,14 +570,7 @@
 			{
 				"name": "Create table defrauded_clients",
 				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "view fraudulent_transactions",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -662,14 +655,7 @@
 			{
 				"name": "fraudulent_transactions_csv",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "view fraudulent_transactions",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -1519,6 +1505,98 @@
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
 				}
+			},
+			{
+				"name": "table frauds_transactions_out ",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "view fraudulent_transactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "SELECT *\nINTO frauds_transactions_out \nFROM fraudulent_transactions\nWHERE transaction_type = 'out';"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "frauds_transactions_out_csv",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "table frauds_transactions_out ",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "frauds_transactions_out",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "fraudsTransactionsOut",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
