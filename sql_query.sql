@@ -53,25 +53,18 @@ SELECT * FROM frauds_transactions_in ORDER BY cliente_id;
 SELECT * FROM frauds_transactions_out ORDER BY cliente_id;
 
 CREATE VIEW frauds_by_client AS
-    SELECT c.nome, COUNT(ft.id_transaction) as quantidade_transacoes
+    SELECT c.nome, c.id, COUNT(ft.id_transaction) as quantidade_transacoes, SUM(valor) as valor_total_fraudes
     FROM  fraudulent_transactions ft
     JOIN  clientes c
     ON c.id = ft.cliente_id 
-    GROUP BY ft.cliente_id, c.nome;
+    GROUP BY ft.cliente_id, c.nome, c.id;
 
 SELECT * 
 FROM frauds_by_client
 ORDER BY quantidade_transacoes DESC;
 
-CREATE VIEW sum_frauds_by_client AS
-    SELECT c.nome, SUM(ft.valor) as valor_total_fraudes
-    FROM  fraudulent_transactions ft
-    JOIN  clientes c
-    ON c.id = ft.cliente_id 
-    GROUP BY ft.cliente_id, c.nome;
-
 SELECT * 
-FROM sum_frauds_by_client
+FROM frauds_by_client 
 ORDER BY valor_total_fraudes DESC;
 
 CREATE VIEW frauds_by_state AS
