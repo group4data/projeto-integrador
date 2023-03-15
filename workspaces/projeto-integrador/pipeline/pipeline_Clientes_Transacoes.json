@@ -1078,7 +1078,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "table frauds_transactions_in",
+						"activity": "view fraudulent_transactions",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -1170,7 +1170,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "fraudulent_transactions_csv",
+						"activity": "view fraudulent_transactions",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -1205,7 +1205,7 @@
 					{
 						"activity": "table frauds_transactions_in",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
@@ -1262,7 +1262,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "frauds_transactions_in_csv",
+						"activity": "table frauds_transactions_in",
 						"dependencyConditions": [
 							"Succeeded"
 						]
