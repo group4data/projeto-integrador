@@ -10,6 +10,19 @@
 [![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://learn.microsoft.com/en-us/azure/?product=popular)
 [![Power Bi](https://img.shields.io/badge/power_bi-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://learn.microsoft.com/en-us/power-bi/)
 
+### Tópicos
+:small_blue_diamond: [Descrição do projeto :id:](descrição-do-projeto)  
+:small_blue_diamond: [Objetivos :dart:](objetivos)  
+:small_blue_diamond: [Dados :open_file_folder:](dados)  
+:small_blue_diamond: [Organização das tarefas :memo:](organização-das-tarefas)  
+:small_blue_diamond: [Pré-requisitos](pré-requisitos)  
+:small_blue_diamond: [Como rodar a aplicação :arrow_forward:](como-rodar-a-aplicação)  
+:small_blue_diamond: [Modelo de entidade de relacionamento](modelo-de-entidade-de-relacionamento)  
+:small_blue_diamond: [Consultas e Análises no Banco de Dados SQL Server na Azure Data Studio :inbox_tray:](Consultas-e-Análises-no-Banco-de-Dados-SQL-Server-na-Azure-Data-Studio)  
+:small_blue_diamond: [Relatório no PowerBI :bar_chart:](Relatório-no-PowerBI)  
+:small_blue_diamond: [Dependências e bibliotecas utilizadas :books:](Dependências-e-bibliotecas-utilizadas)  
+:small_blue_diamond: [Alternativas para o processo de ETL na Azure :cloud:](Alternativas-para-o-processo-de-ETL-na-Azure)  
+:small_blue_diamond: [Desenvolvedoras :princess:](Desenvolvedoras)
 
 ## Descrição do projeto :id:
 
