@@ -1,5 +1,4 @@
 import glob
-import csv
 import os
 
 from pyspark.sql.types import *
@@ -8,12 +7,12 @@ from pyspark.sql.functions import *
 
 def transform_csv_to_df(spark, path, schema):
     if not os.path.isdir(path):
-        raise ValueError(f"{path} não é um diretório válido.")
+        raise ValueError(f"{path} is not a valid directory.")
 
     list_paths_csv = glob.glob(os.path.join(path, '*.csv'))
 
     if not list_paths_csv:
-        raise ValueError(f"Não foram encontrados arquivos csv em {path}.")
+        raise ValueError(f"No csv files found in {path}.")
 
     df = spark.read.csv(list_paths_csv, sep=';', schema=schema, inferSchema=True)
 
@@ -28,7 +27,7 @@ def verify_empty_data(df):
             count_empty = df.filter((col(col_name) == '') | isnull(col_name) | isnan(col_name) | (col(col_name).isNull())).count()
             if count_empty != 0:
                 print(f"Column '{col_name}' has {count_empty} empty/null/none/NaN values.")
-                df = df.fillna({col_name: 'Não informado'})
+                df = df.fillna({col_name: 'Not Informed'})
         elif data_type == IntegerType():
             count_null = df.filter(col(col_name).isNull()).count()
             if count_null != 0:
@@ -64,7 +63,7 @@ def add_state_column(df):
                         .when(col('DDD') == '28', 'Roraima')
                         .when(col('DDD') == '29', 'São Paulo')
                         .when(col('DDD') == '30', 'Maranhão')
-                        .otherwise('Inválido'))
+                        .otherwise('Invalid'))
     df = df.drop('DDD')
     return df
 
@@ -81,22 +80,22 @@ def format_names(df):
     df = df.drop("name_split", "last_name1", "last_name2", "last_name3", "last_name4", "last_name5", "last_name6")
     df = df.withColumn("name", initcap(df.name))
     df = df.withColumn("last_name", initcap(df.last_name))
-    df = df.withColumn("last_name", when(df.last_name == "", "Não informado").otherwise(df.last_name))
+    df = df.withColumn("last_name", when(df.last_name == "", "Not Informed").otherwise(df.last_name))
     df = df.select("id", "name", "last_name", "email", "date_time_register", "phone_number", "state")
     return df
 
-def verify_client_id_existence(spark, df_transactions, df_clients):
+def verify_client_id_existence(df_transactions, df_clients):
     df_ids_transactions = df_transactions.select(col('client_id'))
     df_ids_clients = df_clients.select(col('id'))
     df_new_clients = df_ids_transactions.join(df_ids_clients, df_ids_transactions.client_id == df_ids_clients.id, "leftanti")
     df_new_clients = df_new_clients.distinct()
     df_new_clients = df_new_clients.withColumnRenamed("client_id", "id")
-    df_new_clients = df_new_clients.withColumn('name', lit('Não localizado'))
-    df_new_clients = df_new_clients.withColumn('last_name', lit('Não localizado'))
-    df_new_clients = df_new_clients.withColumn('email', lit('Não localizado'))
+    df_new_clients = df_new_clients.withColumn('name', lit('Not found'))
+    df_new_clients = df_new_clients.withColumn('last_name', lit('Not found'))
+    df_new_clients = df_new_clients.withColumn('email', lit('Not found'))
     df_new_clients = df_new_clients.withColumn('date_time_register', lit('1900-01-01 00:00:00').cast('timestamp'))
-    df_new_clients = df_new_clients.withColumn('phone_number', lit('Não localizado'))
-    df_new_clients = df_new_clients.withColumn('state', lit('Não localizado'))
+    df_new_clients = df_new_clients.withColumn('phone_number', lit('Not found'))
+    df_new_clients = df_new_clients.withColumn('state', lit('Not found'))
     df_clients = df_clients.unionAll(df_new_clients)
     return df_clients
 

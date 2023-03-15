@@ -19,7 +19,7 @@ def connection_database():
         TrustServerCertificate=no;Connection Timeout=30;"
     return pyodbc.connect(connection_string)
 
-def create_table_clients(conn, df):
+def create_table_clients(conn):
     cursor = conn.cursor()
     cursor.execute(f"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'clients'")
     if cursor.fetchone()[0] == 0:
@@ -35,11 +35,11 @@ def create_table_clients(conn, df):
 
         cursor.execute(create_table_query)
         conn.commit()
-        print("Tabela clientes criada com sucesso!")
+        print("clients table successfully created!")
     else:
-        print("A tabela clientes já está no banco de dados!")
+        print("clients table is already in the database!")
 
-def create_table_transactions(conn, df, name_table):
+def create_table_transactions(conn, name_table):
     cursor = conn.cursor()
     cursor.execute(f"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{name_table}'")
     if cursor.fetchone()[0] == 0:
@@ -52,9 +52,9 @@ def create_table_transactions(conn, df, name_table):
 
         cursor.execute(create_table_query)
         conn.commit()
-        print(f"Tabela {name_table} criada com sucesso!")
+        print(f"{name_table} table successfully created!")
     else: 
-        print(f"A tabela {name_table} já está no banco de dados!")
+        print(f"{name_table} table is already in the database!")
 
 
 def insert_df_into_db(conn, df, name_table):
@@ -68,12 +68,12 @@ def insert_df_into_db(conn, df, name_table):
             cursor = conn.cursor()
             cursor.execute(f"INSERT INTO {name_table} ({columns}) VALUES ({placeholders})", values)
             cursor.commit()
-        print("Os dados foram inseridos com sucesso na tabela.")
+        print("The data has been successfully inserted into the table.")
     except pyodbc.IntegrityError:
-        print(f"Os dados já existem no banco de dados!")
+        print(f"This data already exists in the database!")
         conn.rollback()
     except Exception as e:
-        print(f"Ocorreu um erro ao inserir os dados na tabela: {e}")
+        print(f"An error occurred while inserting data into the table: {e}")
         conn.rollback()
     finally:
         cursor.close()
