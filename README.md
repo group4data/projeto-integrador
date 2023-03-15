@@ -151,8 +151,8 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/94936213?v=4" width="100px;" alt="Foto de Ana Paula Lima"/><br>
         <a href="https://br.linkedin.com/in/anapaula-lsantos">
           <sub>
-            <b>Ana Paula Lima</b>
-          </sub>
+            <b>Ana Paula<br>Lima</b>
+          </sub> 
         </a>
       </a>
     </td>
@@ -161,7 +161,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/117690786?v=4" width="100px;" alt="Foto de Beatriz Brandão"/><br>
         <a href="https://www.linkedin.com/in/beatrizcbrandao/">
           <sub>
-            <b>Beatriz Brandão</b>
+            <b>Beatriz<br>Brandão</b>
           </sub>
         </a>
       </a>
@@ -171,7 +171,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/101880070?v=4" width="100px;" alt="Foto de Gabriela Nogueira"/><br>
         <a href="https://www.linkedin.com/in/gabriela-nogueira-dev/">
           <sub>
-            <b>Gabriela Nogueira</b>
+            <b>Gabriela<br>Nogueira</b>
           </sub>
         </a>
       </a>
@@ -181,7 +181,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/127163325?v=4" width="100px;" alt="Foto de Larissa Arruda"/><br>
         <a href="https://www.linkedin.com/in/larissa-arruda-2aa9251a5/">
           <sub>
-            <b>Larissa Arruda</b>
+            <b>Larissa<br>Arruda</b>
           </sub>
         </a>
       </a>
@@ -191,7 +191,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/85495937?v=4" width="100px;" alt="Foto de Luana Rodrigues"/><br>
         <a href="">
           <sub>
-            <b>Luana Rodrigues</b>
+            <b>Luana<br>Rodrigues</b>
           </sub>
         </a>
       </a>
@@ -201,7 +201,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/111579939?v=4" width="100px;" alt="Foto de Pamella Farias"/><br>
         <a href="">
           <sub>
-            <b>Pamella Farias</b>
+            <b>Pamella<br>Farias</b>
           </sub>
         </a>
       </a>
@@ -211,7 +211,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
         <img src="https://avatars.githubusercontent.com/u/121309155?v=4" width="100px;" alt="Foto de Tássia Gonçalves"/><br>
         <a href="https://www.linkedin.com/in/t%C3%A1ssia-gon%C3%A7alves-5244b1166/?originalSubdomain=br">
           <sub>
-            <b>Tássia Gonçalves</b>
+            <b>Tássia<br>Gonçalves</b>
           </sub>
         </a>
       </a>
