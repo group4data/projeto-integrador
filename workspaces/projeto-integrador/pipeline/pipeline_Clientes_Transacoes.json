@@ -270,14 +270,7 @@
 			{
 				"name": "Order by cliente_id",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Create table defrauded_clients",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -293,58 +286,14 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"dataset": {
-						"referenceName": "defrauded_clients",
-						"type": "DatasetReference"
-					},
 					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "Alter table defrauded_clients",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "Order by cliente_id",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "Group4Data_Database",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "ALTER TABLE defrauded_clients\nADD CONSTRAINT fk_clientes_id\nFOREIGN KEY (cliente_id)\nREFERENCES clientes (id);"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			},
 			{
 				"name": "view frauds_by_client",
 				"description": "",
 				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "Alter table defrauded_clients",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -568,32 +517,6 @@
 				}
 			},
 			{
-				"name": "Create table defrauded_clients",
-				"type": "Script",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "Group4Data_Database",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "SELECT DISTINCT(cliente_id), count(id_transaction) AS times_defrauded_client, sum(valor) AS valor_total_fraudes\nINTO defrauded_clients\nFROM fraudulent_transactions JOIN clientes ON cliente_id = clientes.id\nGROUP BY cliente_id;"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
 				"name": "all_transactions_csv",
 				"type": "Copy",
 				"dependsOn": [
@@ -655,7 +578,14 @@
 			{
 				"name": "fraudulent_transactions_csv",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "view fraudulent_transactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -707,14 +637,7 @@
 			{
 				"name": "defrauded_clients_csv",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Alter table defrauded_clients",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -740,28 +663,8 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "defrauded_clients",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "defraudedClients",
-						"type": "DatasetReference"
-					}
-				]
+					"enableStaging": false
+				}
 			},
 			{
 				"name": "frauds_by_client_csv",
@@ -1515,6 +1418,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "table frauds_transactions_in",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -1594,6 +1503,91 @@
 				"outputs": [
 					{
 						"referenceName": "fraudsTransactionsOut",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "table frauds_transactions_in",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "SELECT *\nINTO frauds_transactions_in \nFROM fraudulent_transactions\nWHERE transaction_type = 'in';"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "frauds_transactions_in_csv",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "table frauds_transactions_in",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "frauds_transactions_in",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "fraudsTransactionsIn",
 						"type": "DatasetReference"
 					}
 				]
