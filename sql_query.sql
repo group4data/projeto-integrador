@@ -19,19 +19,33 @@ CREATE VIEW fraudulent_transactions AS
     WHERE datediff(SECOND, datatime_previous, data_hora) < 120
     ) AS frauds
 
-SELECT DISTINCT(cliente_id), count(id_transaction) AS times_defrauded_client, sum(valor) AS valor_total_fraudes
-INTO defrauded_clients
-FROM fraudulent_transactions JOIN clientes ON cliente_id = clientes.id
-GROUP BY cliente_id;
+SELECT *
+INTO frauds_transactions_out 
+FROM fraudulent_transactions
+WHERE tipo_transacao = 'out';
 
-SELECT * 
-FROM defrauded_clients 
-ORDER BY cliente_id;
+SELECT *
+INTO frauds_transactions_in 
+FROM fraudulent_transactions
+WHERE tipo_transacao = 'in';
 
-ALTER TABLE defrauded_clients
+ALTER TABLE frauds_transactions_in
 ADD CONSTRAINT fk_clientes_id
 FOREIGN KEY (cliente_id)
 REFERENCES clientes (id);
+
+ALTER TABLE frauds_transactions_out
+ADD CONSTRAINT fk_transactions_id_out
+FOREIGN KEY (id_transaction)
+REFERENCES transactions_out (id);
+
+ALTER TABLE frauds_transactions_in
+ADD CONSTRAINT fk_transactions_id_in
+FOREIGN KEY (id_transaction)
+REFERENCES transactions_in (id);
+
+SELECT * FROM frauds_transactions_in ORDER BY cliente_id;
+SELECT * FROM frauds_transactions_out ORDER BY cliente_id;
 
 CREATE VIEW frauds_by_client AS
     SELECT c.nome, COUNT(ft.id_transaction) as quantidade_transacoes
