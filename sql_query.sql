@@ -35,6 +35,11 @@ FOREIGN KEY (cliente_id)
 REFERENCES clientes (id);
 
 ALTER TABLE frauds_transactions_out
+ADD CONSTRAINT fk_clientes_id_out
+FOREIGN KEY (cliente_id)
+REFERENCES clientes (id);
+
+ALTER TABLE frauds_transactions_out
 ADD CONSTRAINT fk_transactions_id_out
 FOREIGN KEY (id_transaction)
 REFERENCES transactions_out (id);
