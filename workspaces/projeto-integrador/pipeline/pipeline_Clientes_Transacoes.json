@@ -1111,7 +1111,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "table frauds_transactions_out ",
+						"activity": "alter table out 2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -1170,9 +1170,9 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "view fraudulent_transactions",
+						"activity": "alter table out 1",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
@@ -1203,7 +1203,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "table frauds_transactions_in",
+						"activity": "alter table in 2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
