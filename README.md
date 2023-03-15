@@ -11,18 +11,18 @@
 [![Power Bi](https://img.shields.io/badge/power_bi-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://learn.microsoft.com/en-us/power-bi/)
 
 ### Tópicos
-:small_blue_diamond: [Descrição do projeto :id:](descrição-do-projeto)  
-:small_blue_diamond: [Objetivos :dart:](objetivos)  
-:small_blue_diamond: [Dados :open_file_folder:](dados)  
-:small_blue_diamond: [Organização das tarefas :memo:](organização-das-tarefas)  
-:small_blue_diamond: [Pré-requisitos](pré-requisitos)  
-:small_blue_diamond: [Como rodar a aplicação :arrow_forward:](como-rodar-a-aplicação)  
-:small_blue_diamond: [Modelo de entidade de relacionamento](modelo-de-entidade-de-relacionamento)  
-:small_blue_diamond: [Consultas e Análises no Banco de Dados SQL Server na Azure Data Studio :inbox_tray:](Consultas-e-Análises-no-Banco-de-Dados-SQL-Server-na-Azure-Data-Studio)  
-:small_blue_diamond: [Relatório no PowerBI :bar_chart:](Relatório-no-PowerBI)  
-:small_blue_diamond: [Dependências e bibliotecas utilizadas :books:](Dependências-e-bibliotecas-utilizadas)  
-:small_blue_diamond: [Alternativas para o processo de ETL na Azure :cloud:](Alternativas-para-o-processo-de-ETL-na-Azure)  
-:small_blue_diamond: [Desenvolvedoras :princess:](Desenvolvedoras)
+:small_blue_diamond: [Descrição do projeto :id:](#descrição-do-projeto-id)  
+:small_blue_diamond: [Objetivos :dart:](#objetivos-dart)  
+:small_blue_diamond: [Dados :open_file_folder:](#dados-open_file_folder)  
+:small_blue_diamond: [Organização das tarefas :memo:](organização-das-tarefas-memo)  
+:small_blue_diamond: [Pré-requisitos](#pré-requisitos)  
+:small_blue_diamond: [Como rodar a aplicação :arrow_forward:](#como-rodar-a-aplicação-arrow_forward)  
+:small_blue_diamond: [Modelo de entidade de relacionamento](#modelo-de-entidade-de-relacionamento)  
+:small_blue_diamond: [Consultas e Análises no Banco de Dados SQL Server na Azure Data Studio :inbox_tray:](#consultas-e-análises-no-banco-de-dados-sql-server-na-azure-data-studio-inbox_tray)  
+:small_blue_diamond: [Relatório no PowerBI :bar_chart:](Relatório-no-powerbi-bar_chart)  
+:small_blue_diamond: [Dependências e bibliotecas utilizadas :books:](Dependências-e-bibliotecas-utilizadas-books)  
+:small_blue_diamond: [Alternativas para o processo de ETL na Azure :cloud:](#alternativas-para-o-processo-de-etl-na-azure-cloud)  
+:small_blue_diamond: [Desenvolvedoras :princess:](#desenvolvedoras-princess)  
 
 ## Descrição do projeto :id:
 
