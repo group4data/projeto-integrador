@@ -1067,7 +1067,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "DROP VIEW all_transactions;"
+							"text": "DROP VIEW all_transactions;\nDROP VIEW fraudulent_transactions;\nDROP VIEW frauds_transactions_out;\nDROP VIEW frauds_transactions_in;\nDROP VIEW frauds_by_client;\nDROP VIEW frauds_by_state;\nDROP VIEW sum_of_frauds;\nDROP VIEW count_of_frauds;\nDROP VIEW frauds_by_year;\nDROP VIEW view frauds_by_shift_and_year;\nDROP VIEW frauds_by_month;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -1439,7 +1439,18 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "frauds_transactions_in",
+						"type": "DatasetReference"
+					}
+				}
 			},
 			{
 				"name": "order by qty_of_transactions desc",
