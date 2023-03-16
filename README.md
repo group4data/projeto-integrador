@@ -110,9 +110,15 @@ python3 main.py
 ou rode o arquivo Jupyter Notebook: <b>jupyter_code.ipynb</b>
 
 ## Modelo de entidade de relacionamento
+### Modelo Conceitual
+<p><img alt="Image" title="icon" src="modelo-conceitual.jpeg" /></p>
+
+### Modelo Lógico
+<p><img alt="Image" title="icon" src="modelo-logico.jpeg" /></p>
 
 ## Consultas e Análises no Banco de Dados SQL Server na [Azure Data Studio](https://azure.microsoft.com/pt-br/products/data-studio) :inbox_tray:
-No arquivo sql_query.sql encontra-se o script das consultas e análises realizadas no banco de dados, incluindo a criação da tabela defrauded_clients.  
+No arquivo sql_query.sql encontra-se o script das consultas e análises realizadas no banco de dados, incluindo a criação da tabelas de 
+transações fraudadas in e transações fraudadas out.
 O conteúdo do arquivo deverá ser utilizado no Azure Data Studio para as análises.
 
 ## Relatório no PowerBI :bar_chart:
@@ -189,7 +195,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
     <td align="center">
       <a href="https://github.com/lurodig">
         <img src="https://avatars.githubusercontent.com/u/85495937?v=4" width="100px;" alt="Foto de Luana Rodrigues"/><br>
-        <a href="">
+        <a href="https://www.linkedin.com/in/lrdgx/">
           <sub>
             <b>Luana<br>Rodrigues</b>
           </sub>
@@ -199,7 +205,7 @@ Após a execução do pipeline, realizou-se conexão do Azure Blob a um PowerBI 
     <td align="center">
       <a href="https://github.com/PamellaFarias">
         <img src="https://avatars.githubusercontent.com/u/111579939?v=4" width="100px;" alt="Foto de Pamella Farias"/><br>
-        <a href="">
+        <a href="https://www.linkedin.com/in/pamella-farias-8a4037185/">
           <sub>
             <b>Pamella<br>Farias</b>
           </sub>
