@@ -123,6 +123,8 @@ O conteúdo do arquivo deverá ser utilizado no Azure Data Studio para as análi
 
 ## Relatório no PowerBI :bar_chart:
 
+<p><img alt="Image" title="icon" src="dashboard1.png" /></p>
+<p><img alt="Image" title="icon" src="dashboard2.png" /></p>
 
 ## Dependências e bibliotecas utilizadas :books:
 * [pyspark](https://spark.apache.org/docs/latest/api/python/)
