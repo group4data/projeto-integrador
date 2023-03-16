@@ -273,12 +273,6 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "order by client_id - out",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
 						"activity": "order by client_id - in",
 						"dependencyConditions": [
 							"Succeeded"
@@ -1074,105 +1068,13 @@
 				}
 			},
 			{
-				"name": "table frauds_transactions_out ",
+				"name": "table frauds_transactions_in",
 				"type": "Script",
 				"dependsOn": [
 					{
 						"activity": "view fraudulent_transactions",
 						"dependencyConditions": [
 							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "Group4Data_Database",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "SELECT *\nINTO frauds_transactions_out \nFROM fraudulent_transactions\nWHERE transaction_type = 'out';"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
-				"name": "frauds_transactions_out_csv",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "alter table out 2",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "frauds_transactions_out",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "fraudsTransactionsOut",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
-				"name": "table frauds_transactions_in",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "alter table out 1",
-						"dependencyConditions": [
-							"Completed"
 						]
 					}
 				],
@@ -1361,7 +1263,7 @@
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "table frauds_transactions_out ",
+						"activity": "table frauds_transactions_out",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -1387,38 +1289,6 @@
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
-				"name": "order by client_id - out",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "alter table out 2",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM frauds_transactions_out ORDER BY client_id;",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "frauds_transactions_out",
-						"type": "DatasetReference"
-					}
 				}
 			},
 			{
@@ -1516,6 +1386,98 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "table frauds_transactions_out",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "view fraudulent_transactions",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "SELECT *\nINTO frauds_transactions_out \nFROM fraudulent_transactions\nWHERE transaction_type = 'out';"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "frauds_transactions_out_csv",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "alter table out 2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "frauds_transactions_in",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "fraudsTransactionsOut",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
