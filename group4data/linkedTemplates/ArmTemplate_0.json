@@ -247,76 +247,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/defraudedClients')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "grop4data_sink",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "defrauded_clients.csv",
-						"container": "outputs"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "id",
-						"type": "String"
-					},
-					{
-						"name": "cliente_id",
-						"type": "String"
-					},
-					{
-						"name": "valor",
-						"type": "String"
-					},
-					{
-						"name": "data_hora",
-						"type": "String"
-					},
-					{
-						"name": "tipo_transacao",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/grop4data_sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/defrauded_clients')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Group4Data_Database",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "defrauded_clients"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Group4Data_Database')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/fraudsByClient')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -561,6 +491,55 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/fraudsTransactionsOut')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "grop4data_sink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "frauds_transactions_out.csv",
+						"container": "outputs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "cliente_id",
+						"type": "String"
+					},
+					{
+						"name": "valor",
+						"type": "String"
+					},
+					{
+						"name": "data_hora",
+						"type": "String"
+					},
+					{
+						"name": "tipo_transacao",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/grop4data_sink')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/frauds_by_client')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -722,6 +701,27 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/grop4data_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fraudulent_transactions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "fraudulent_transactions"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Group4Data_Database')]"
 			]
 		}
 	]

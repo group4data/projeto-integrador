@@ -28,7 +28,7 @@
 				"activities": [
 					{
 						"name": "view all_transactions",
-						"description": "Criar view all_transactions a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
@@ -47,7 +47,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW all_transactions AS \n  SELECT * FROM ( \n    SELECT id, cliente_id, valor, data_hora, 'in' AS tipo_transacao FROM transactions_in\n    UNION ALL\n    SELECT id, cliente_id, valor, data_hora, 'out' AS tipo_transacao FROM transactions_out) AS transactions;"
+									"text": "CREATE VIEW all_transactions AS \n  SELECT * FROM ( \n    SELECT id, client_id, value, date_time, 'in' AS transaction_type FROM transactions_in\n    UNION ALL\n    SELECT id, client_id, value, date_time, 'out' AS transaction_type FROM transactions_out) AS transactions;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -55,7 +55,7 @@
 					},
 					{
 						"name": "view fraudulent_transactions",
-						"description": "Criar view fraudulent_transactions a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -81,7 +81,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW fraudulent_transactions AS \n  SELECT * FROM (\n  SELECT cliente_id, table_datatime_previous.id AS id_transaction, valor, data_hora, tipo_transacao\n    FROM (\n      SELECT id, cliente_id, valor, data_hora, tipo_transacao,\n        LAG(data_hora) OVER (\n          PARTITION BY cliente_id\n          ORDER BY data_hora\n        ) AS datatime_previous\n      FROM all_transactions\n    ) AS table_datatime_previous\n    JOIN clientes ON table_datatime_previous.cliente_id = clientes.id\n    WHERE datediff(SECOND, datatime_previous, data_hora) < 120\n    ) AS frauds"
+									"text": "CREATE VIEW fraudulent_transactions AS \n  SELECT * FROM (\n  SELECT client_id, table_datatime_previous.id AS id_transaction, value, date_time, transaction_type\n    FROM (\n      SELECT id, client_id, value, date_time, transaction_type,\n        LAG(date_time) OVER (\n          PARTITION BY client_id\n          ORDER BY date_time\n        ) AS datatime_previous\n      FROM all_transactions\n    ) AS table_datatime_previous\n    JOIN clients ON table_datatime_previous.client_id = clients.id\n    WHERE datediff(SECOND, datatime_previous, date_time) < 120\n    ) AS frauds"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -89,7 +89,7 @@
 					},
 					{
 						"name": "view frauds_by_state",
-						"description": "Criar view frauds_by_state a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -115,7 +115,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW frauds_by_state AS\n    SELECT c.estado, COUNT(ft.cliente_id) as quantidade_de_fraudes\n    FROM fraudulent_transactions ft \n    JOIN clientes c \n    ON c.id = ft.cliente_id \n    GROUP BY c.estado;"
+									"text": "CREATE VIEW frauds_by_state AS\n    SELECT c.state, COUNT(ft.client_id) as qty_of_frauds\n    FROM fraudulent_transactions ft \n    JOIN clients c \n    ON c.id = ft.client_id \n    GROUP BY c.state;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -123,11 +123,11 @@
 					},
 					{
 						"name": "view sum_of_frauds",
-						"description": "Criar view sum_of_frauds a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "Order by quantidade_de_fraudes desc",
+								"activity": "Order by qty_of_frauds desc",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -149,7 +149,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW sum_of_frauds AS\n    SELECT tipo_transacao, SUM(valor) as somatorio_valor\n    FROM  fraudulent_transactions\n    GROUP BY tipo_transacao;"
+									"text": "CREATE VIEW sum_of_frauds AS\n    SELECT transaction_type, SUM(value) as sum_value\n    FROM  fraudulent_transactions\n    GROUP BY transaction_type;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -157,11 +157,11 @@
 					},
 					{
 						"name": "view count_of_frauds",
-						"description": "Criar view count_of_frauds a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "Order by somatorio_valor desc",
+								"activity": "Order by sum_value desc",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -183,7 +183,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW count_of_frauds AS\n    SELECT tipo_transacao, COUNT(valor) as quantidade_transacoes\n    FROM  fraudulent_transactions\n    GROUP BY tipo_transacao;"
+									"text": "CREATE VIEW count_of_frauds AS\n    SELECT transaction_type, COUNT(value) as qty_of_transactions\n    FROM  fraudulent_transactions\n    GROUP BY transaction_type;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -191,11 +191,11 @@
 					},
 					{
 						"name": "view frauds_by_year",
-						"description": "Criar view frauds_by_year a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "Order by quantidade_transacoes desc",
+								"activity": "Order by qty_of_transactions desc 2",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -217,7 +217,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW frauds_by_year AS\n    SELECT YEAR(data_hora) AS Ano, COUNT(*) AS frauds_by_year\n    FROM fraudulent_transactions\n    GROUP BY YEAR(data_hora);"
+									"text": "CREATE VIEW frauds_by_year AS\n    SELECT YEAR(date_time) AS Year, COUNT(*) AS frauds_by_year\n    FROM fraudulent_transactions\n    GROUP BY YEAR(date_time);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -225,11 +225,11 @@
 					},
 					{
 						"name": "view frauds_by_shift_and_year",
-						"description": "Criar view frauds_by_shift_and_year a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "Order by Ano desc",
+								"activity": "Order by Year desc",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -251,7 +251,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW frauds_by_shift_and_year AS\n    SELECT DATEPART(year, data_hora) AS ano, \n        CASE \n            WHEN DATEPART(hour, data_hora) BETWEEN 0 AND 5 THEN '0-6 horas'\n            WHEN DATEPART(hour, data_hora) BETWEEN 6 AND 11 THEN '6-12 horas'\n            WHEN DATEPART(hour, data_hora) BETWEEN 12 AND 17 THEN '12-18 horas'\n            WHEN DATEPART(hour, data_hora) BETWEEN 18 AND 23 THEN '18-24 horas'\n        END AS horario_transacao,\n        COUNT(*) AS quantidade_transacoes\n    FROM fraudulent_transactions\n    GROUP BY DATEPART(year, data_hora), \n            CASE \n                WHEN DATEPART(hour, data_hora) BETWEEN 0 AND 5 THEN '0-6 horas'\n                WHEN DATEPART(hour, data_hora) BETWEEN 6 AND 11 THEN '6-12 horas'\n                WHEN DATEPART(hour, data_hora) BETWEEN 12 AND 17 THEN '12-18 horas'\n                WHEN DATEPART(hour, data_hora) BETWEEN 18 AND 23 THEN '18-24 horas'\n            END;"
+									"text": "CREATE VIEW frauds_by_shift_and_year AS\n    SELECT DATEPART(year, date_time) AS Year, \n        CASE \n            WHEN DATEPART(hour, date_time) BETWEEN 0 AND 5 THEN '0-6 hours'\n            WHEN DATEPART(hour, date_time) BETWEEN 6 AND 11 THEN '6-12 hours'\n            WHEN DATEPART(hour, date_time) BETWEEN 12 AND 17 THEN '12-18 hours'\n            WHEN DATEPART(hour, date_time) BETWEEN 18 AND 23 THEN '18-24 hours'\n        END AS transaction_time,\n        COUNT(*) AS qty_of_transactions\n    FROM fraudulent_transactions\n    GROUP BY DATEPART(year, date_time), \n            CASE \n                WHEN DATEPART(hour, date_time) BETWEEN 0 AND 5 THEN '0-6 hours'\n                WHEN DATEPART(hour, date_time) BETWEEN 6 AND 11 THEN '6-12 hours'\n                WHEN DATEPART(hour, date_time) BETWEEN 12 AND 17 THEN '12-18 hours'\n                WHEN DATEPART(hour, date_time) BETWEEN 18 AND 23 THEN '18-24 hours'\n            END;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -259,11 +259,11 @@
 					},
 					{
 						"name": "view frauds_by_month",
-						"description": "Criar view frauds_by_month a partir de consulta",
+						"description": "",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "Order by ano",
+								"activity": "Order by Year",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -285,74 +285,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW frauds_by_month AS\n    SELECT MONTH(data_hora) AS mes, COUNT(id_transaction) AS quantidade_de_fraudes\n    FROM fraudulent_transactions\n    GROUP BY MONTH(data_hora);"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Order by cliente_id",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Create table defrauded_clients",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * FROM defrauded_clients ORDER BY cliente_id;",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "defrauded_clients",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Alter table defrauded_clients",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Order by cliente_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "Group4Data_Database",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "ALTER TABLE defrauded_clients\nADD CONSTRAINT fk_clientes_id\nFOREIGN KEY (cliente_id)\nREFERENCES clientes (id);"
+									"text": "CREATE VIEW frauds_by_month AS\n    SELECT MONTH(date_time) AS month, COUNT(id_transaction) AS qty_of_frauds\n    FROM fraudulent_transactions\n    GROUP BY MONTH(date_time);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -364,7 +297,13 @@
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "Alter table defrauded_clients",
+								"activity": "order by client_id - in",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "order by client_id - out",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -386,14 +325,15 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "CREATE VIEW frauds_by_client AS\n    SELECT c.nome, COUNT(ft.id_transaction) as quantidade_transacoes\n    FROM  fraudulent_transactions ft\n    JOIN  clientes c\n    ON c.id = ft.cliente_id \n    GROUP BY ft.cliente_id, c.nome;"
+									"text": "CREATE VIEW frauds_by_client AS\n    SELECT c.name, c.id, COUNT(ft.id_transaction) as qty_of_transactions, SUM(value) as value_total_frauds\n    FROM  fraudulent_transactions ft\n    JOIN  clients c\n    ON c.id = ft.client_id \n    GROUP BY ft.client_id, c.name, c.id;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "Order by quantidade_de_fraudes desc",
+						"name": "Order by qty_of_frauds desc",
+						"description": "",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -414,7 +354,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * \nFROM frauds_by_state\nORDER BY quantidade_de_fraudes DESC;",
+								"sqlReaderQuery": "SELECT * \nFROM frauds_by_state\nORDER BY qty_of_frauds DESC;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -427,7 +367,7 @@
 						}
 					},
 					{
-						"name": "Order by somatorio_valor desc",
+						"name": "Order by sum_value desc",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -448,7 +388,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * \nFROM sum_of_frauds\nORDER BY somatorio_valor DESC;",
+								"sqlReaderQuery": "SELECT * \nFROM sum_of_frauds\nORDER BY sum_value DESC;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -461,8 +401,8 @@
 						}
 					},
 					{
-						"name": "Order by quantidade_transacoes desc",
-						"description": "\n",
+						"name": "Order by qty_of_transactions desc 2",
+						"description": "",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -483,7 +423,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * \nFROM count_of_frauds\nORDER BY quantidade_transacoes DESC;",
+								"sqlReaderQuery": "SELECT * \nFROM count_of_frauds\nORDER BY qty_of_transactions DESC;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -496,7 +436,7 @@
 						}
 					},
 					{
-						"name": "Order by Ano desc",
+						"name": "Order by Year desc",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -517,7 +457,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * \nFROM frauds_by_year\nORDER BY Ano DESC;",
+								"sqlReaderQuery": "SELECT * \nFROM frauds_by_year\nORDER BY Year DESC;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -530,7 +470,7 @@
 						}
 					},
 					{
-						"name": "Order by ano",
+						"name": "Order by Year",
 						"description": "",
 						"type": "Lookup",
 						"dependsOn": [
@@ -552,7 +492,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * \nFROM frauds_by_shift_and_year\nORDER BY ano;",
+								"sqlReaderQuery": "SELECT * \nFROM frauds_by_shift_and_year\nORDER BY Year;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -565,7 +505,8 @@
 						}
 					},
 					{
-						"name": "Order by quantidade_de_fraudes_month desc",
+						"name": "Order by qty_of_frauds desc 2",
+						"description": "",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -586,7 +527,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT * \nFROM frauds_by_month\nORDER BY quantidade_de_fraudes DESC;",
+								"sqlReaderQuery": "SELECT * \nFROM frauds_by_month\nORDER BY qty_of_frauds DESC;",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -596,39 +537,6 @@
 								"parameters": {}
 							},
 							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Create table defrauded_clients",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "view fraudulent_transactions",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "Group4Data_Database",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "SELECT DISTINCT(cliente_id), count(id_transaction) AS times_defrauded_client, sum(valor) AS valor_total_fraudes\nINTO defrauded_clients\nFROM fraudulent_transactions JOIN clientes ON cliente_id = clientes.id\nGROUP BY cliente_id;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
@@ -748,67 +656,6 @@
 						"outputs": [
 							{
 								"referenceName": "fraudulentTransactions",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "defrauded_clients_csv",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Alter table defrauded_clients",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "defrauded_clients",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "defraudedClients",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1242,7 +1089,7 @@
 						]
 					},
 					{
-						"name": "drop view all_transactions",
+						"name": "drop all views",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -1268,18 +1115,18 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP VIEW all_transactions;"
+									"text": "DROP VIEW all_transactions;\nDROP VIEW fraudulent_transactions;\nDROP TABLE frauds_transactions_out;\nDROP TABLE frauds_transactions_in;\nDROP VIEW frauds_by_client;\nDROP VIEW frauds_by_state;\nDROP VIEW sum_of_frauds;\nDROP VIEW count_of_frauds;\nDROP VIEW frauds_by_year;\nDROP VIEW frauds_by_shift_and_year;\nDROP VIEW frauds_by_month;"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop view  fraudulent_transactions",
+						"name": "table frauds_transactions_in",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "drop view all_transactions",
+								"activity": "view fraudulent_transactions",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1301,18 +1148,79 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP VIEW fraudulent_transactions;"
+									"text": "SELECT *\nINTO frauds_transactions_in \nFROM fraudulent_transactions\nWHERE transaction_type = 'in';"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop table defrauded_clients",
+						"name": "frauds_transactions_in_csv",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "alter table in 2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "frauds_transactions_in",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "fraudsTransactionsIn",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "alter table in 1",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "drop view  fraudulent_transactions",
+								"activity": "table frauds_transactions_in",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1334,18 +1242,18 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP TABLE defrauded_clients;"
+									"text": "ALTER TABLE frauds_transactions_in\nADD CONSTRAINT fk_clients_id\nFOREIGN KEY (client_id)\nREFERENCES clients (id);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop view frauds_by_client",
+						"name": "alter table in 2",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "drop table defrauded_clients",
+								"activity": "alter table in 1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1367,18 +1275,18 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP VIEW frauds_by_client;"
+									"text": "ALTER TABLE frauds_transactions_in\nADD CONSTRAINT fk_transactions_id_in\nFOREIGN KEY (id_transaction)\nREFERENCES transactions_in (id);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop view frauds_by_state",
+						"name": "alter table out 2",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "drop view frauds_by_client",
+								"activity": "alter table out 1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1400,18 +1308,18 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP VIEW frauds_by_state;"
+									"text": "ALTER TABLE frauds_transactions_out\nADD CONSTRAINT fk_transactions_id_out\nFOREIGN KEY (id_transaction)\nREFERENCES transactions_out (id);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop view sum_of_frauds",
+						"name": "alter table out 1",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "drop view frauds_by_state",
+								"activity": "table frauds_transactions_out",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1433,18 +1341,117 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP VIEW sum_of_frauds;"
+									"text": "ALTER TABLE frauds_transactions_out\nADD CONSTRAINT fk_clients_id_out\nFOREIGN KEY (client_id)\nREFERENCES clients (id);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop view count_of_frauds",
+						"name": "order by client_id - in",
+						"description": "",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "alter table in 2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "frauds_transactions_in",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "order by qty_of_transactions desc",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "view frauds_by_client",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT * \nFROM frauds_by_client\nORDER BY qty_of_transactions DESC;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "frauds_by_client",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "order by value_total_frauds desc",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "view frauds_by_client",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT * \nFROM frauds_by_client \nORDER BY value_total_frauds DESC;",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "frauds_by_client",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "table frauds_transactions_out",
 						"type": "Script",
 						"dependsOn": [
 							{
-								"activity": "drop view sum_of_frauds",
+								"activity": "view fraudulent_transactions",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1466,18 +1473,18 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "DROP VIEW count_of_frauds;"
+									"text": "SELECT *\nINTO frauds_transactions_out \nFROM fraudulent_transactions\nWHERE transaction_type = 'out';"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					},
 					{
-						"name": "drop view frauds_by_year",
-						"type": "Script",
+						"name": "frauds_transactions_out_csv",
+						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "drop view count_of_frauds",
+								"activity": "alter table out 2",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1491,26 +1498,55 @@
 							"secureInput": false
 						},
 						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "Group4Data_Database",
-							"type": "LinkedServiceReference"
-						},
 						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "DROP VIEW frauds_by_year;"
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
 								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "frauds_transactions_in",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "fraudsTransactionsOut",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					},
 					{
-						"name": "drop view frauds_by_shift_and_year",
-						"type": "Script",
+						"name": "order by client_id - out",
+						"description": "",
+						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "drop view frauds_by_year",
+								"activity": "alter table out 2",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1524,51 +1560,17 @@
 							"secureInput": false
 						},
 						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "Group4Data_Database",
-							"type": "LinkedServiceReference"
-						},
 						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "DROP VIEW frauds_by_shift_and_year;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "drop view frauds_by_month",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "drop view frauds_by_shift_and_year",
-								"dependencyConditions": [
-									"Succeeded"
-								]
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "frauds_transactions_out",
+								"type": "DatasetReference",
+								"parameters": {}
 							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "Group4Data_Database",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "DROP VIEW frauds_by_month;"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					}
 				],
@@ -1580,7 +1582,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Group4Data_Database')]",
-				"[concat(variables('factoryId'), '/datasets/defrauded_clients')]",
 				"[concat(variables('factoryId'), '/datasets/frauds_by_state')]",
 				"[concat(variables('factoryId'), '/datasets/sum_of_frauds')]",
 				"[concat(variables('factoryId'), '/datasets/count_of_frauds')]",
@@ -1591,7 +1592,6 @@
 				"[concat(variables('factoryId'), '/datasets/allTransactions')]",
 				"[concat(variables('factoryId'), '/datasets/fraudulent_transactions')]",
 				"[concat(variables('factoryId'), '/datasets/fraudulentTransactions')]",
-				"[concat(variables('factoryId'), '/datasets/defraudedClients')]",
 				"[concat(variables('factoryId'), '/datasets/frauds_by_client')]",
 				"[concat(variables('factoryId'), '/datasets/fraudsByClient')]",
 				"[concat(variables('factoryId'), '/datasets/fraudsByState')]",
@@ -1599,7 +1599,11 @@
 				"[concat(variables('factoryId'), '/datasets/countOfFrauds')]",
 				"[concat(variables('factoryId'), '/datasets/fraudsByYear')]",
 				"[concat(variables('factoryId'), '/datasets/fraudsByShiftAndYear')]",
-				"[concat(variables('factoryId'), '/datasets/fraudsByMonth')]"
+				"[concat(variables('factoryId'), '/datasets/fraudsByMonth')]",
+				"[concat(variables('factoryId'), '/datasets/frauds_transactions_in')]",
+				"[concat(variables('factoryId'), '/datasets/fraudsTransactionsIn')]",
+				"[concat(variables('factoryId'), '/datasets/fraudsTransactionsOut')]",
+				"[concat(variables('factoryId'), '/datasets/frauds_transactions_out')]"
 			]
 		},
 		{
@@ -1795,76 +1799,6 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "count_of_frauds"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Group4Data_Database')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/defraudedClients')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "grop4data_sink",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "defrauded_clients.csv",
-						"container": "outputs"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "id",
-						"type": "String"
-					},
-					{
-						"name": "cliente_id",
-						"type": "String"
-					},
-					{
-						"name": "valor",
-						"type": "String"
-					},
-					{
-						"name": "data_hora",
-						"type": "String"
-					},
-					{
-						"name": "tipo_transacao",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/grop4data_sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/defrauded_clients')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Group4Data_Database",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "defrauded_clients"
 				}
 			},
 			"dependsOn": [
@@ -2081,6 +2015,55 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"fileName": "frauds_by_year.csv",
+						"container": "outputs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "cliente_id",
+						"type": "String"
+					},
+					{
+						"name": "valor",
+						"type": "String"
+					},
+					{
+						"name": "data_hora",
+						"type": "String"
+					},
+					{
+						"name": "tipo_transacao",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/grop4data_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fraudsTransactionsOut')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "grop4data_sink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "frauds_transactions_out.csv",
 						"container": "outputs"
 					},
 					"columnDelimiter": ",",
@@ -2484,6 +2467,97 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/frauds_transactions_in')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "frauds_transactions_in"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Group4Data_Database')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fraudsTransactionsIn')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "grop4data_sink",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "frauds_transactions_in.csv",
+						"container": "outputs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "cliente_id",
+						"type": "String"
+					},
+					{
+						"name": "valor",
+						"type": "String"
+					},
+					{
+						"name": "data_hora",
+						"type": "String"
+					},
+					{
+						"name": "tipo_transacao",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/grop4data_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/frauds_transactions_out')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Group4Data_Database",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "frauds_transactions_out"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Group4Data_Database')]"
+			]
 		}
 	]
 }
