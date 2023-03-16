@@ -277,6 +277,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "order by client_id - out",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -1061,7 +1067,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "DROP VIEW all_transactions;\nDROP VIEW fraudulent_transactions;\nDROP VIEW frauds_transactions_out;\nDROP VIEW frauds_transactions_in;\nDROP VIEW frauds_by_client;\nDROP VIEW frauds_by_state;\nDROP VIEW sum_of_frauds;\nDROP VIEW count_of_frauds;\nDROP VIEW frauds_by_year;\nDROP VIEW view frauds_by_shift_and_year;\nDROP VIEW frauds_by_month;"
+							"text": "DROP VIEW all_transactions;\nDROP VIEW fraudulent_transactions;\nDROP TABLE frauds_transactions_out;\nDROP TABLE frauds_transactions_in;\nDROP VIEW frauds_by_client;\nDROP VIEW frauds_by_state;\nDROP VIEW sum_of_frauds;\nDROP VIEW count_of_frauds;\nDROP VIEW frauds_by_year;\nDROP VIEW frauds_by_shift_and_year;\nDROP VIEW frauds_by_month;"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -1293,7 +1299,7 @@
 			},
 			{
 				"name": "order by client_id - in",
-				"description": "SELECT * FROM frauds_transactions_in ORDER BY client_id;",
+				"description": "",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -1478,6 +1484,38 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "order by client_id - out",
+				"description": "",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "alter table out 2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "frauds_transactions_out",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"annotations": []
